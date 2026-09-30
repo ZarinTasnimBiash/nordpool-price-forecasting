@@ -1,0 +1,445 @@
+<title>How The Forecaster Works</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  color-scheme:light;
+  --plane:#eaeef1; --surface:#f8fafb; --surface-2:#eff3f5; --code-bg:#f1f5f7;
+  --ink:#0d1214; --ink-2:#445159; --muted:#6b7780; --rule:#d5dde2;
+  --accent:#2a78d6; --good:#1baf7a; --bad:#d03b3b; --amber:#c8860a;
+  --shadow:0 1px 2px rgba(13,18,20,.05),0 8px 24px -16px rgba(13,18,20,.25);
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --plane:#0b0e10; --surface:#15181a; --surface-2:#1c2124; --code-bg:#12171a;
+    --ink:#f2f5f6; --ink-2:#b3bfc6; --muted:#8b979e; --rule:#272d31;
+    --accent:#5fa2ee; --good:#35bd8c; --bad:#e06a6a; --amber:#e0a53a;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --plane:#0b0e10; --surface:#15181a; --surface-2:#1c2124; --code-bg:#12171a;
+  --ink:#f2f5f6; --ink-2:#b3bfc6; --muted:#8b979e; --rule:#272d31;
+  --accent:#5fa2ee; --good:#35bd8c; --bad:#e06a6a; --amber:#e0a53a;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--body);
+     font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+
+.shell{max-width:1220px;margin:0 auto;padding:0 clamp(16px,3vw,28px)}
+.masthead{padding:clamp(30px,5vw,58px) 0 24px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(32px,5.6vw,54px);line-height:1.03;
+   letter-spacing:-.022em;margin:12px 0 14px;text-wrap:balance}
+.standfirst{font-size:clamp(16px,2vw,18.5px);color:var(--ink-2);max-width:64ch;margin:0}
+
+.layout{display:grid;grid-template-columns:224px minmax(0,1fr);gap:44px;align-items:start;padding:32px 0 100px}
+@media (max-width:900px){.layout{grid-template-columns:1fr;gap:18px}}
+nav.toc{position:sticky;top:18px;font-size:13.5px;max-height:calc(100vh - 36px);overflow-y:auto}
+@media (max-width:900px){nav.toc{position:static;max-height:none;background:var(--surface);
+  border:1px solid var(--rule);border-radius:3px;padding:16px 18px}}
+nav.toc .grp{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin:18px 0 7px}
+nav.toc .grp:first-child{margin-top:0}
+nav.toc a{display:block;color:var(--ink-2);text-decoration:none;padding:3px 0 3px 10px;
+  border-left:2px solid var(--rule);line-height:1.4}
+nav.toc a:hover{color:var(--accent);border-left-color:var(--accent)}
+nav.toc a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+main{min-width:0}
+section{margin-bottom:56px;scroll-margin-top:20px}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(23px,3.3vw,31px);line-height:1.15;
+   letter-spacing:-.018em;margin:0 0 12px;text-wrap:balance}
+h3{font-family:var(--display);font-weight:600;font-size:19px;margin:30px 0 9px;letter-spacing:-.01em}
+h4{font-weight:600;font-size:15.5px;margin:20px 0 7px}
+p{margin:0 0 13px;max-width:72ch}
+ul,ol{padding-left:21px;margin:0 0 13px;max-width:72ch}
+li{margin-bottom:6px}
+a{color:var(--accent)}
+code{font-family:var(--mono);font-size:12.5px;background:var(--code-bg);border:1px solid var(--rule);
+     border-radius:3px;padding:1px 5px}
+pre{background:var(--code-bg);border:1px solid var(--rule);border-radius:3px;padding:13px 15px;
+    overflow-x:auto;margin:11px 0 14px}
+pre code{border:none;background:none;padding:0;font-size:12px;line-height:1.6;display:block;white-space:pre}
+
+.lede{font-size:17px;color:var(--ink-2);max-width:66ch}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:17px 19px;
+      box-shadow:var(--shadow);margin:16px 0}
+.card h4{margin-top:0}
+
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+@media (max-width:760px){.ba{grid-template-columns:1fr}}
+.ba > div{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:13px 15px;min-width:0}
+.ba h5{margin:0 0 8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
+.ba .before h5{color:var(--bad)}
+.ba .after h5{color:var(--good)}
+.ba pre{margin:0;background:var(--code-bg)}
+
+.stage{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;margin:0 0 1px;
+       background:var(--surface);padding:16px 18px}
+.stages{background:var(--rule);border:1px solid var(--rule);margin:18px 0}
+.snum{font-family:var(--mono);font-size:12px;width:28px;height:28px;border-radius:50%;
+      background:var(--good);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.stage h4{margin:2px 0 5px}
+.stage p{margin:0;font-size:14.8px;color:var(--ink-2)}
+
+.tbl{overflow-x:auto;margin:15px 0}
+table{border-collapse:collapse;width:100%;font-size:14.3px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;
+         color:var(--muted);font-weight:400;border-bottom:1px solid var(--ink-2)}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px}
+tr.hl td{background:var(--surface-2);font-weight:600}
+
+.note{border-left:3px solid var(--accent);background:var(--surface);padding:13px 16px;margin:14px 0;
+      border-radius:0 3px 3px 0;box-shadow:var(--shadow)}
+.note b{font-weight:600}
+.warn{border-left:3px solid var(--amber);background:var(--surface-2);padding:13px 16px;margin:14px 0;border-radius:0 3px 3px 0}
+.warn b{color:var(--amber);font-weight:600}
+.say{border-left:3px solid var(--good);background:var(--surface-2);padding:13px 16px;margin:14px 0;border-radius:0 3px 3px 0}
+.say b{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+       color:var(--good);margin-bottom:5px}
+.say p{margin:0}
+
+footer{border-top:1px solid var(--rule);padding:20px 0 60px;font-family:var(--mono);
+       font-size:11.5px;color:var(--muted);line-height:1.9}
+</style>
+
+<div class="shell">
+<div class="masthead">
+  <div class="eyebrow">Nord Pool price forecasting · plain-language reference</div>
+  <h1>How the forecaster works</h1>
+  <p class="standfirst">Everything built so far, in ordinary words: what the project predicts, how the data is cleaned, where it differs from the reference platform's platform, and every problem that had to be solved along the way — with the real data before and after.</p>
+</div>
+
+<div class="layout">
+<nav class="toc" aria-label="Contents">
+  <div class="grp">The idea</div>
+  <a href="#what">What I am predicting</a>
+  <a href="#stages">The four stages so far</a>
+  <div class="grp">Design</div>
+  <a href="#platform">This project vs. the reference platform</a>
+  <a href="#better">Is mine better?</a>
+  <div class="grp">The data</div>
+  <a href="#prices">Prices: before and after</a>
+  <a href="#weather">Weather: before and after</a>
+  <a href="#row">One finished row</a>
+  <div class="grp">The hard parts</div>
+  <a href="#dst">The 25-hour day</a>
+  <a href="#cutoff">The cutoff that drifted</a>
+  <a href="#tz">The invisible timezone</a>
+  <a href="#leap">Leap years (not a problem)</a>
+  <div class="grp">Evidence</div>
+  <a href="#experiment">What weather is worth</a>
+  <a href="#say">How to explain it</a>
+</nav>
+
+<main>
+
+<!-- ============ WHAT ============ -->
+<section id="what">
+  <h2>What I am predicting</h2>
+  <p class="lede">Electricity cannot be stored, so its price is decided fresh every day by an auction.</p>
+  <p>Every day around noon, producers and buyers submit offers for <em>each of the 24 hours of tomorrow</em>. The auction closes at 12:00 and publishes 24 prices about an hour later. Those prices are then fixed.</p>
+  <p>Sweden is split into four price zones — <b>SE1</b> in the far north down to <b>SE4</b> in the far south — because the power lines running north to south can only carry so much. The north has plenty of hydro power and few people; the south has the opposite. Over three years the far south paid on average <b>2.2×</b> what the far north paid.</p>
+  <div class="note">
+    <p><b>The task in one sentence:</b> at about 11:00 today, one hour before the auction closes, predict the 24 hourly prices for tomorrow in zone SE3 (the Stockholm region).</p>
+  </div>
+  <p>The 11:00 deadline is the entire difficulty. Anything I feed the model has to be something I would genuinely have at 11:00. Using information that arrives later is called <b>leakage</b>, and it produces a model that scores brilliantly in testing and fails in reality.</p>
+</section>
+
+<!-- ============ STAGES ============ -->
+<section id="stages">
+  <h2>The four stages so far</h2>
+  <div class="stages">
+    <div class="stage"><div class="snum">1</div><div>
+      <h4>Read how the reference platform works</h4>
+      <p>Studied seven internal documents describing their data platform, and wrote down which conventions to copy and which to substitute — before writing any code.</p>
+    </div></div>
+    <div class="stage"><div class="snum">2</div><div>
+      <h4>Collect the data</h4>
+      <p>Built the machinery that fetches prices and weather, checks them against a fixed contract, and stores them. Then backfilled three years: 197,088 prices and 608,550 weather readings.</p>
+    </div></div>
+    <div class="stage"><div class="snum">3</div><div>
+      <h4>Look at what arrived</h4>
+      <p>Measured the patterns — two daily peaks, January at 2.5× September, cold pushes prices up and wind pulls them down — and audited the data for defects. One real defect was found.</p>
+    </div></div>
+    <div class="stage"><div class="snum">4</div><div>
+      <h4>Turn it into model food</h4>
+      <p>Built one table with 25,822 rows: each row is one hour to predict, plus 56 things I legitimately knew beforehand. A leakage check refuses to let the table exist if anything cheats.</p>
+    </div></div>
+  </div>
+  <p>Still to come: building the model itself, testing how good it really is, and writing it up.</p>
+</section>
+
+<!-- ============ PLATFORM ============ -->
+<section id="platform">
+  <h2>This project vs. the reference platform</h2>
+  <p>The project deliberately copies the <em>shape</em> of the reference platform's platform while replacing the parts that need their infrastructure. Every substitution is written down rather than quietly made.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>The reference platform</th><th>This project</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Dagster for scheduling</td><td><b>Same</b></td><td>Free, runs on a laptop, and it's the core of how they work</td></tr>
+      <tr><td>One config file describing every source</td><td><b>Same</b></td><td>Pure convention, costs nothing to copy</td></tr>
+      <tr><td>A schema class per table as a contract</td><td><b>Same</b></td><td>Same reason</td></tr>
+      <tr><td>Google Cloud Storage for raw files</td><td>A folder on disk</td><td>No cloud access. Same file format, same layout</td></tr>
+      <tr><td>BigQuery as the warehouse</td><td>DuckDB, one local file</td><td>No cloud access. Speaks near-identical SQL</td></tr>
+      <tr><td>Paid Nord Pool data feed</td><td>A free public source for history</td><td>The free Nord Pool API only serves ~62 days</td></tr>
+      <tr><td>Weather <em>forecasts</em> collected daily</td><td>Weather <em>observations</em></td><td>Historic forecasts weren't collected. Measured cost: 2.33 EUR/MWh</td></tr>
+      <tr><td>Kubernetes deployment</td><td>Runs locally</td><td>Deployment isn't the learning goal</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ BETTER ============ -->
+<section id="better">
+  <h2>Is mine better?</h2>
+  <p><b>No — and it shouldn't be.</b> Theirs runs a real business on paid data and cloud infrastructure. Mine runs on a laptop with free data. Claiming otherwise would be silly.</p>
+  <p>There are two places where mine is <em>more careful</em>, though, and both are worth mentioning:</p>
+  <div class="card">
+    <h4>1. Two independent price sources, checked against each other</h4>
+    <p>Because the free Nord Pool feed only reaches back 62 days, a second free source supplies the history. They overlap for 62 days — and on those <b>19,200 overlapping hours they agree exactly</b>: average difference 0.0000 EUR/MWh, correlation 1.0. Most pipelines never get to verify their data against a second opinion.</p>
+  </div>
+  <div class="card">
+    <h4>2. An automated leakage check</h4>
+    <p>The feature table refuses to be built if any ingredient came from after the 11:00 deadline. It caught two real bugs during development (both below). A check like this is unusual, and it is the single most defensible thing in the project.</p>
+  </div>
+  <p>Everything else — storage, scale, reliability, deployment — is straightforwardly worse, on purpose.</p>
+</section>
+
+<!-- ============ PRICES ============ -->
+<section id="prices">
+  <h2>Prices: before and after cleaning</h2>
+  <p>Here is a real hour, all the way through. This is 14 February 2024, hour one, in zone SE3.</p>
+
+  <div class="ba">
+    <div class="before"><h5>Before — what the source sends</h5>
+<pre><code>{
+  "SEK_per_kWh": 0.50531,
+  "EUR_per_kWh": 0.04493,
+  "EXR": 11.246702,
+  "time_start": "2024-02-14T00:00:00+01:00",
+  "time_end":   "2024-02-14T01:00:00+01:00"
+}</code></pre></div>
+    <div class="after"><h5>After — what I store</h5>
+<pre><code>delivery_start_utc  2024-02-13 23:00:00+00:00
+delivery_end_utc    2024-02-14 00:00:00+00:00
+delivery_area       SE3
+price_eur_mwh       44.93
+price_sek_kwh       0.50531
+exchange_rate       11.246702
+resolution_minutes  60
+delivery_date_cet   2024-02-14
+inserted_at_utc     2026-08-24 13:46:50+00:00</code></pre></div>
+  </div>
+
+  <h4>Three things changed, and each has a reason</h4>
+  <ul>
+    <li><b>Price ×1000.</b> The source quotes per <em>kilowatt</em>-hour; the market and the reference platform both work per <em>megawatt</em>-hour. <code>0.04493 → 44.93</code>. Mixing the two would be a 1000× error hiding in plain sight.</li>
+    <li><b>Time converted to UTC.</b> <code>00:00 +01:00</code> becomes <code>23:00</code> the previous day in UTC. Sweden changes its clocks twice a year; UTC never does. Storing local time would break the arithmetic twice a year (see below).</li>
+    <li><b>Extra columns added.</b> Which zone, how long the period is, which auction day it belongs to, and when I fetched it. <code>resolution_minutes</code> matters because the market switched from hourly to 15-minute pricing in October 2025 — storing the length rather than assuming it is why that change didn't corrupt anything.</li>
+  </ul>
+  <p>I keep the original Swedish-krona price and the exchange rate too. They cost nothing, and if the two price sources ever disagreed on euros, that is the first place to look.</p>
+</section>
+
+<!-- ============ WEATHER ============ -->
+<section id="weather">
+  <h2>Weather: before and after cleaning</h2>
+  <p>Weather arrives as a Swedish spreadsheet file that doesn't start where you'd expect:</p>
+<pre><code>Stationsnamn;Stationsnummer;Stationsnät;Mäthöjd (meter över marken)
+Stockholm-Observatoriekullen A;98230;SMHIs stationsnät;2.0
+
+Parameternamn;Beskrivning;Enhet
+Lufttemperatur;momentanvärde, 1 gång/tim;celsius
+
+Tidsperiod (fr.o.m);Tidsperiod (t.o.m);Höjd;Latitud;Longitud
+1996-10-01 00:00:00;2026-08-24 13:20:11;43.133;59.3417;18.0549
+
+Datum;Tid (UTC);Lufttemperatur;Kvalitet;;Tidsutsnitt:     ← the real table starts here
+2026-04-16;01:00:00;3.7;G;;Data från senaste fyra månaderna</code></pre>
+  <p>Nine lines of description come first, and the columns are separated by semicolons rather than commas — because in Sweden the comma is the decimal point. The code scans down for the line beginning <code>Datum;Tid (UTC)</code> and starts reading there.</p>
+
+  <h4>After cleaning — and the detail worth noticing</h4>
+  <p>One hour in SE3 becomes six rows, one per measurement:</p>
+<pre><code>time_utc                   area  parameter                  station_id  value  quality
+2024-02-14 12:00:00+00:00  SE3   air_pressure_at_sea_level       98230  1016.4  G
+2024-02-14 12:00:00+00:00  SE3   air_temperature                 98230     1.3  G
+2024-02-14 12:00:00+00:00  SE3   precipitation_amount_1h         98230     0.0  G
+2024-02-14 12:00:00+00:00  SE3   relative_humidity               98230    91.0  G
+2024-02-14 12:00:00+00:00  SE3   wind_from_direction             97200     0.0  G
+2024-02-14 12:00:00+00:00  SE3   wind_speed                      97200     0.0  G</code></pre>
+  <div class="note">
+    <p><b>Look at the station numbers.</b> Four measurements come from station <code>98230</code> in central Stockholm — but the two wind measurements come from <code>97200</code>, Bromma airport. The city station stopped reporting wind, so wind is borrowed from the airport.</p>
+    <p style="margin-top:8px">That is exactly why weather is stored one-row-per-measurement instead of one-row-per-hour. A single wide row labelled "SE3 at 12:00" would silently imply all six numbers came from one place. This way the source travels with every value.</p>
+  </div>
+  <p>Three such borrowings exist: SE3 wind from Bromma, SE2 rainfall from a station 55 km north, SE4 air pressure from Malmö airport. All three were found by a check that tests all 24 zone-and-measurement combinations.</p>
+</section>
+
+<!-- ============ ROW ============ -->
+<section id="row">
+  <h2>One finished row, as the model sees it</h2>
+  <p>After all the cleaning, this is a single training example — one question and its answer:</p>
+<pre><code>hour_utc                       2025-01-15 17:00:00+00:00   ← the hour being predicted
+cutoff_utc                     2025-01-14 10:00:00+00:00   ← what I knew, and when
+target_spot_price_se3                              25.37   ← THE ANSWER
+
+spot_price_se3_lag_24h                             23.44   ← same hour, yesterday
+spot_price_se3_lag_48h                             18.31   ← same hour, two days ago
+spot_price_se3_lag_168h                           141.05   ← same hour, last week
+spot_price_se4_lag_24h                             36.48   ← neighbouring zone
+
+spot_price_se3_roll_24h_mean                       10.67   ← yesterday's average
+spot_price_se3_roll_24h_min                        -0.11   ← yesterday's cheapest
+spot_price_se3_roll_24h_max                        24.00   ← yesterday's dearest
+
+hour_of_day                                           18
+day_of_week                                            2   ← Wednesday
+is_weekend                                             0
+hour_sin / hour_cos                            -1.0 / 0.0  ← hour, on a circle</code></pre>
+  <p>Two details worth explaining if asked:</p>
+  <ul>
+    <li><b>Why the hour appears twice</b> — as a number and as a pair of sine/cosine values. To a computer, hour 23 and hour 0 look 23 apart, when really they are neighbours. Placing the hour on a circle fixes that: midnight sits next to 11pm, as it should.</li>
+    <li><b>Why last week's price is in there</b> at all, when two days ago is more recent. Because the weekly rhythm is stronger: the relationship measured <b>0.427</b> at three days but rises again to <b>0.450</b> at one week. Wednesdays resemble Wednesdays.</li>
+  </ul>
+</section>
+
+<!-- ============ DST ============ -->
+<section id="dst">
+  <h2>The hard part: the 25-hour day</h2>
+  <p class="lede">Once a year, Sweden's clocks go back an hour on the last Sunday of October. That day has 25 hours — the hour 02:00–03:00 happens twice.</p>
+  <p>This one day per year broke three separate things.</p>
+
+  <h3>Problem 1 — two prices for the same hour</h3>
+  <p>The source can't describe a repeated hour cleanly, so it publishes overlapping periods. Real rows from 29 October 2023:</p>
+  <div class="ba">
+    <div class="before"><h5>Before — overlapping and contradictory</h5>
+<pre><code>start                end                 mins  price
+2023-10-28 22:00:00  2023-10-28 23:00:00   60  34.33
+2023-10-28 23:00:00  2023-10-29 00:00:00   60  27.19
+2023-10-29 00:00:00  2023-10-29 02:00:00  120  25.34  ←┐ these two
+2023-10-29 01:00:00  2023-10-29 02:00:00   60  22.35  ←┘ overlap
+2023-10-29 02:00:00  2023-10-29 03:00:00   60  21.15</code></pre></div>
+    <div class="after"><h5>After — one row per hour</h5>
+<pre><code>hour                 price
+2023-10-28 22:00:00  34.33
+2023-10-28 23:00:00  27.19
+2023-10-29 00:00:00  25.34
+2023-10-29 01:00:00  22.35   ← took the 1-hour price
+2023-10-29 02:00:00  21.15</code></pre></div>
+  </div>
+  <p>The hour <code>01:00–02:00</code> is covered <em>twice</em>, by a two-hour block priced 25.34 and a one-hour block priced 22.35. Left alone, that hour would be counted twice, or averaged into a price that never existed.</p>
+  <div class="note"><p><b>The rule that fixed it:</b> spread every block across the hours it touches, and when two blocks claim the same hour, <b>the shorter one wins</b>. A one-hour price is more specific than a two-hour price covering the same time. The hour at 00:00 keeps 25.34 because nothing else covers it; the hour at 01:00 takes 22.35.</p></div>
+
+  <h3>Problem 2 — "yesterday" landed on today</h3>
+  <p>One of the model's ingredients is <em>the price at this same hour yesterday</em>. The code found it by subtracting 24 hours. On a 25-hour day that isn't enough to leave the day:</p>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>Time</th></tr></thead>
+    <tbody>
+      <tr><td>Predicting</td><td><code>Sun 29 Oct, 23:00</code></td></tr>
+      <tr><td>Wanted</td><td><code>Sat 28 Oct, 23:00</code></td></tr>
+      <tr class="hl"><td>Got, minus 24 hours</td><td><code>Sun 29 Oct, 00:00</code> — the same day</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Why that is cheating:</b> all 25 of Sunday's prices are published together, at 13:00 on Saturday. At my 11:00 Saturday deadline, none of them exist yet. Sunday 00:00 and Sunday 23:00 come out of the same sealed envelope — using one to predict the other is reading the answer.</p>
+  <p><b>The fix:</b> there is no honest 24-hour lag for that hour, so those rows are deleted. <b>Three hours in three years.</b> A small hole is better than a quiet lie.</p>
+</section>
+
+<!-- ============ CUTOFF ============ -->
+<section id="cutoff">
+  <h2>The cutoff that drifted by an hour</h2>
+  <p>The deadline is defined as <em>11:00 on the day before delivery</em>. The original code went back "one day" — but a computer's "one day" means <b>exactly 24 hours of elapsed time</b>, and on a 25-hour day that isn't the same thing:</p>
+<pre><code>target                 : Mon 30 Oct 00:00      ← the hour to predict
+1. midnight that day   : Mon 30 Oct 00:00
+2. minus "one day"     : Sun 29 Oct 01:00      ← should be 00:00!
+3. add 11 hours        : Sun 29 Oct 12:00      ← WRONG, an hour late
+
+after the fix          : Sun 29 Oct 11:00      ← correct</code></pre>
+  <p>Step 2 is the whole bug. Sunday had 25 hours, so 24 hours before Monday midnight is Sunday <em>1am</em>, not Sunday midnight. Everything after it inherited the extra hour, and the model was allowed to see an hour of data it wouldn't really have.</p>
+  <div class="note"><p><b>In one sentence:</b> "yesterday's date" and "24 hours ago" are the same thing 364 days a year, and different on the day the clocks change. The fix was to do the arithmetic on the <b>calendar</b> — where 30 October minus one day is simply 29 October — rather than on elapsed time.</p></div>
+</section>
+
+<!-- ============ TZ ============ -->
+<section id="tz">
+  <h2>The invisible bug: a dropped timezone</h2>
+  <p>This one had nothing to do with clocks changing, and it is the most dangerous of the three because <b>nothing went wrong on the surface</b>.</p>
+  <p>Weather is stored under stamped times like <code>2025-01-14 10:00 +00:00</code>. To fetch "the weather at the deadline", the code built a list of deadline times — but through a step that quietly throws the <code>+00:00</code> away:</p>
+<pre><code>weather is stored under : 2025-01-14 10:00:00+00:00
+looked up with          : 2025-01-14 10:00:00          ← no timezone
+matches found           : 0 out of 1,083</code></pre>
+  <p>It is like searching a phone book for <code>70 123 4567</code> when every entry is filed as <code>+46 70 123 4567</code>. Same digits, no match.</p>
+  <p><b>And nothing complained.</b> A lookup's job is to return "missing" for things it can't find; it cannot tell the difference between "no weather that day" and "you asked the wrong way". So the program finished cheerfully and <b>all 24 weather columns were empty</b>. The model would have trained with no weather at all.</p>
+  <div class="warn"><p><b>The lesson worth repeating:</b> the dangerous bugs in data work are the polite ones. Nothing crashed. Two of these three bugs would have made the model look <em>better</em> than it is; this one made it quietly worse. All three were caught by asking "is this result even plausible?" rather than by anything going bang.</p></div>
+  <p>The fix was two lines: keep the timezone when building the lookup, and refuse to continue if an entire weather column is empty — because 25,822 missing values in a row is never real data.</p>
+</section>
+
+<!-- ============ LEAP ============ -->
+<section id="leap">
+  <h2>Leap years: not a problem, and it's worth knowing why</h2>
+  <p>29 February 2024 sits in the middle of the data. It needed no special handling at all:</p>
+<pre><code>29 February 2024, zone SE3
+  price rows   : 24  (expected 24)  ✓
+  feature rows : 24  (expected 24)  ✓</code></pre>
+  <p><b>Why leap years are harmless but daylight saving is not:</b></p>
+  <ul>
+    <li>A leap year adds a whole extra <b>day</b>. Every day still has 24 hours, so all the hour arithmetic is untouched. The calendar simply has one more square in it.</li>
+    <li>Daylight saving adds or removes an <b>hour</b>. Suddenly a day has 23 or 25 hours, and every calculation that assumed "a day = 24 hours" is wrong for that day.</li>
+  </ul>
+  <p>If a supervisor asks about leap years, that's the answer: the code works in absolute hours and never assumes a fixed number of days, so leap days pass through like any other day. It was the <em>hour</em> changes that caused all the trouble.</p>
+</section>
+
+<!-- ============ EXPERIMENT ============ -->
+<section id="experiment">
+  <h2>What I measured: is the weather compromise costing anything?</h2>
+  <p>Because weather observations arrive in real time, at 11:00 I only have weather up to 11:00. The model therefore gets a <em>summary of the last 24 hours</em> rather than knowing what tomorrow's weather will be — the same figures for all 24 hours of the next day.</p>
+  <p>Rather than argue about whether that matters, it was measured. The same model, trained three times, changing only what it may know about the weather:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>What the model sees</th><th>Honest?</th><th class="num">MAE</th><th class="num">RMSE</th></tr></thead>
+    <tbody>
+      <tr><td>Guess: yesterday's price at the same hour</td><td>—</td><td class="num">25.97</td><td class="num">35.64</td></tr>
+      <tr><td>Guess: last week's price at the same hour</td><td>—</td><td class="num">33.60</td><td class="num">44.95</td></tr>
+      <tr class="hl"><td>Model, weather summary at the deadline</td><td>yes — what I ship</td><td class="num">22.14</td><td class="num">29.23</td></tr>
+      <tr><td>Model, "tomorrow is like today" weather</td><td>yes</td><td class="num">22.59</td><td class="num">29.50</td></tr>
+      <tr><td>Model, tomorrow's <em>actual</em> weather</td><td><b>no — cheating</b></td><td class="num">19.81</td><td class="num">26.49</td></tr>
+    </tbody>
+  </table></div>
+  <p>MAE is the average miss in EUR/MWh — lower is better. The last row is impossible in real life; it exists to measure the ceiling.</p>
+  <h4>Three findings</h4>
+  <ol>
+    <li><b>Perfect weather knowledge would be worth 2.33 EUR/MWh</b> — about 10.5% of current error. Real, but not enormous. An actual forecast is good but imperfect, so the achievable gain is a fraction of that.</li>
+    <li><b>The "free" improvement made things worse.</b> Feeding the model yesterday's weather hour-by-hour, instead of a summary, scored 22.59 against 22.14. It was tried, measured, and rejected — and the code is kept so the result can be reproduced.</li>
+    <li><b>The model beats the best simple guess by only 3.83.</b> That is the real headline: there is more to gain from improving the model than from improving the weather.</li>
+  </ol>
+  <div class="note"><p><b>Decision: don't build the weather-forecast pipeline yet.</b> Archived forecasts do exist and were verified working, but they would chase at most 2.33 while the model itself is leaving more than that on the table. Revisit once the model has been properly built and weather becomes the limiting factor.</p></div>
+</section>
+
+<!-- ============ SAY ============ -->
+<section id="say">
+  <h2>How to explain this in a meeting</h2>
+  <div class="say"><b>The project</b><p>“At 11:00, an hour before the day-ahead auction closes, predict tomorrow's 24 hourly prices for SE3. Everything the model uses must be knowable at that moment — which is the whole difficulty.”</p></div>
+  <div class="say"><b>The architecture</b><p>“It mirrors the platform's conventions — config-driven sources, schema contracts, Dagster assets and schedules — with local storage standing in for GCS and BigQuery. Every substitution is documented rather than quietly made.”</p></div>
+  <div class="say"><b>The data quality</b><p>“Two independent price sources overlap for 62 days and agree exactly across 19,200 hours, which is what justifies trusting the historical source for the years the other one can't cover.”</p></div>
+  <div class="say"><b>The hard part</b><p>“Sweden has a 25-hour day once a year. A fixed 24-hour lag can't escape it, so the model was reaching a price from the same unpublished auction. The leakage check caught it; those three hours are dropped.”</p></div>
+  <div class="say"><b>The honest limitation</b><p>“I train on observed weather, not forecasts, because historic forecasts weren't collected. I measured what that costs: 2.33 EUR/MWh at most. It's a documented limitation, not an unknown.”</p></div>
+  <div class="say"><b>If asked what's still wrong</b><p>“A single failed request aborts a whole backfill instead of skipping and reporting; the free Nord Pool window rolls, so old scheduled days will eventually age out; and the model currently beats a naive guess by only 3.83 EUR/MWh, which is where the next effort goes.”</p></div>
+  <p style="margin-top:18px">That last one matters most. A reviewer who finds a weakness you didn't mention trusts you less; one you warned them about trusts you more.</p>
+</section>
+
+<footer>
+  Companion documents: docs/01_platform_conventions.md · docs/02_data_access.md · docs/03_eda.md · docs/04_features.md<br>
+  Reproduce the weather experiment with <code>python models/weather_value_experiment.py</code><br>
+  All figures measured on data collected 2023-09-01 to 2026-08-19.
+</footer>
+
+</main>
+</div>
+</div>

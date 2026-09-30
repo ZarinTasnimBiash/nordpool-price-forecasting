@@ -1,0 +1,413 @@
+{
+ "n_features": 70,
+ "families": {
+  "weather observed": 24,
+  "weather forecast": 16,
+  "price lags": 10,
+  "price rolling": 10,
+  "calendar": 10
+ },
+ "by_hour": {
+  "0": {
+   "MAE": 16.168,
+   "naive_MAE": 19.899,
+   "mean_price": 58.829,
+   "gain_pct": 18.751
+  },
+  "1": {
+   "MAE": 16.209,
+   "naive_MAE": 20.166,
+   "mean_price": 55.485,
+   "gain_pct": 19.618
+  },
+  "2": {
+   "MAE": 16.465,
+   "naive_MAE": 19.787,
+   "mean_price": 53.705,
+   "gain_pct": 16.788
+  },
+  "3": {
+   "MAE": 16.295,
+   "naive_MAE": 19.509,
+   "mean_price": 53.137,
+   "gain_pct": 16.475
+  },
+  "4": {
+   "MAE": 16.199,
+   "naive_MAE": 19.948,
+   "mean_price": 53.692,
+   "gain_pct": 18.794
+  },
+  "5": {
+   "MAE": 17.474,
+   "naive_MAE": 21.569,
+   "mean_price": 57.95,
+   "gain_pct": 18.986
+  },
+  "6": {
+   "MAE": 19.258,
+   "naive_MAE": 27.026,
+   "mean_price": 68.541,
+   "gain_pct": 28.742
+  },
+  "7": {
+   "MAE": 23.987,
+   "naive_MAE": 35.347,
+   "mean_price": 80.894,
+   "gain_pct": 32.139
+  },
+  "8": {
+   "MAE": 23.953,
+   "naive_MAE": 36.95,
+   "mean_price": 82.16,
+   "gain_pct": 35.173
+  },
+  "9": {
+   "MAE": 21.873,
+   "naive_MAE": 33.051,
+   "mean_price": 72.28,
+   "gain_pct": 33.819
+  },
+  "10": {
+   "MAE": 20.399,
+   "naive_MAE": 28.987,
+   "mean_price": 63.081,
+   "gain_pct": 29.63
+  },
+  "11": {
+   "MAE": 19.113,
+   "naive_MAE": 26.605,
+   "mean_price": 56.573,
+   "gain_pct": 28.158
+  },
+  "12": {
+   "MAE": 17.709,
+   "naive_MAE": 24.837,
+   "mean_price": 52.425,
+   "gain_pct": 28.697
+  },
+  "13": {
+   "MAE": 16.794,
+   "naive_MAE": 23.722,
+   "mean_price": 50.307,
+   "gain_pct": 29.203
+  },
+  "14": {
+   "MAE": 16.709,
+   "naive_MAE": 23.729,
+   "mean_price": 51.646,
+   "gain_pct": 29.582
+  },
+  "15": {
+   "MAE": 18.764,
+   "naive_MAE": 26.462,
+   "mean_price": 57.401,
+   "gain_pct": 29.092
+  },
+  "16": {
+   "MAE": 21.488,
+   "naive_MAE": 29.694,
+   "mean_price": 66.947,
+   "gain_pct": 27.633
+  },
+  "17": {
+   "MAE": 23.829,
+   "naive_MAE": 31.759,
+   "mean_price": 79.971,
+   "gain_pct": 24.968
+  },
+  "18": {
+   "MAE": 24.256,
+   "naive_MAE": 31.434,
+   "mean_price": 88.579,
+   "gain_pct": 22.834
+  },
+  "19": {
+   "MAE": 23.671,
+   "naive_MAE": 30.251,
+   "mean_price": 90.745,
+   "gain_pct": 21.752
+  },
+  "20": {
+   "MAE": 22.58,
+   "naive_MAE": 29.677,
+   "mean_price": 86.955,
+   "gain_pct": 23.913
+  },
+  "21": {
+   "MAE": 20.567,
+   "naive_MAE": 26.453,
+   "mean_price": 80.359,
+   "gain_pct": 22.25
+  },
+  "22": {
+   "MAE": 18.846,
+   "naive_MAE": 23.309,
+   "mean_price": 71.89,
+   "gain_pct": 19.15
+  },
+  "23": {
+   "MAE": 16.77,
+   "naive_MAE": 20.447,
+   "mean_price": 62.727,
+   "gain_pct": 17.982
+  }
+ },
+ "by_month": {
+  "2025-11": {
+   "MAE": 21.051,
+   "naive_MAE": 33.691,
+   "mean_price": 63.353,
+   "gain_pct": 37.518
+  },
+  "2025-12": {
+   "MAE": 18.711,
+   "naive_MAE": 24.437,
+   "mean_price": 47.393,
+   "gain_pct": 23.433
+  },
+  "2026-01": {
+   "MAE": 22.216,
+   "naive_MAE": 24.89,
+   "mean_price": 101.471,
+   "gain_pct": 10.746
+  },
+  "2026-02": {
+   "MAE": 20.064,
+   "naive_MAE": 25.438,
+   "mean_price": 103.721,
+   "gain_pct": 21.127
+  },
+  "2026-03": {
+   "MAE": 16.525,
+   "naive_MAE": 25.955,
+   "mean_price": 54.52,
+   "gain_pct": 36.333
+  },
+  "2026-04": {
+   "MAE": 18.558,
+   "naive_MAE": 25.808,
+   "mean_price": 51.692,
+   "gain_pct": 28.093
+  },
+  "2026-05": {
+   "MAE": 20.579,
+   "naive_MAE": 26.145,
+   "mean_price": 70.858,
+   "gain_pct": 21.29
+  },
+  "2026-06": {
+   "MAE": 20.488,
+   "naive_MAE": 29.292,
+   "mean_price": 71.316,
+   "gain_pct": 30.055
+  },
+  "2026-07": {
+   "MAE": 16.524,
+   "naive_MAE": 21.065,
+   "mean_price": 48.522,
+   "gain_pct": 21.557
+  },
+  "2026-08": {
+   "MAE": 21.837,
+   "naive_MAE": 26.289,
+   "mean_price": 48.456,
+   "gain_pct": 16.935
+  }
+ },
+ "by_price": {
+  "negative": {
+   "n": 110,
+   "MAE": 8.943,
+   "naive_MAE": 8.957,
+   "mean_price": -1.529,
+   "share_of_total_error_pct": 0.718
+  },
+  "0-20": {
+   "n": 1130,
+   "MAE": 15.113,
+   "naive_MAE": 23.11,
+   "mean_price": 8.395,
+   "share_of_total_error_pct": 12.462
+  },
+  "20-50": {
+   "n": 1480,
+   "MAE": 14.636,
+   "naive_MAE": 27.132,
+   "mean_price": 35.96,
+   "share_of_total_error_pct": 15.806
+  },
+  "50-100": {
+   "n": 2796,
+   "MAE": 18.763,
+   "naive_MAE": 23.073,
+   "mean_price": 74.562,
+   "share_of_total_error_pct": 38.28
+  },
+  "100-200": {
+   "n": 1433,
+   "MAE": 27.348,
+   "naive_MAE": 32.59,
+   "mean_price": 125.914,
+   "share_of_total_error_pct": 28.597
+  },
+  "200+": {
+   "n": 58,
+   "MAE": 97.745,
+   "naive_MAE": 97.433,
+   "mean_price": 251.884,
+   "share_of_total_error_pct": 4.137
+  }
+ },
+ "mean_signed_error": -4.498894832511808,
+ "importance_top20": {
+  "spot_price_se3_lag_24h": 5.7117,
+  "wind_speed_se3_fc2": 1.5523,
+  "wind_speed_se4_fc2": 1.3104,
+  "day_of_week": 1.0615,
+  "hour_cos": 0.7587,
+  "wind_speed_se2_fc2": 0.4043,
+  "dow_sin": 0.3919,
+  "spot_price_se4_lag_24h": 0.384,
+  "wind_speed_se1_fc2": 0.3312,
+  "spot_price_se3_lag_168h": 0.319,
+  "air_pressure_at_sea_level_se4_fc2": 0.3037,
+  "hour_sin": 0.3017,
+  "air_temperature_se3_fc2": 0.2411,
+  "air_pressure_at_sea_level_se2_fc2": 0.2182,
+  "air_temperature_se1_fc2": 0.2082,
+  "spot_price_se4_lag_168h": 0.1618,
+  "air_pressure_at_sea_level_se4_24h_mean": 0.1221,
+  "wind_speed_se1_24h_mean": 0.117,
+  "air_temperature_se3_24h_min": 0.097,
+  "spot_price_se3_lag_48h": 0.087
+ },
+ "importance_by_family": {
+  "weather observed": 0.4637,
+  "weather forecast": 4.4748,
+  "price lags": 6.6849,
+  "price rolling": -0.0548,
+  "calendar": 2.5779
+ },
+ "wind_check": {
+  "wind_speed_se1_fc2": 0.3312,
+  "wind_speed_se3_fc2": 1.5523
+ },
+ "observed_weather_ablation": {
+  "MAE_with": 19.557833033447345,
+  "MAE_without": 20.383472563025865,
+  "diff": 0.8256395295785204,
+  "lo": 0.28855942177484717,
+  "hi": 1.3285974022287832,
+  "significant": true
+ },
+ "intervals": {
+  "symmetric": {
+   "coverage": {
+    "coverage": 0.8040530897673754,
+    "mean_width": 66.40320661486042,
+    "below": 0.05508776937348366,
+    "above": 0.14085914085914086
+   },
+   "pads": [
+    [
+     7.48,
+     7.48
+    ],
+    [
+     5.18,
+     5.18
+    ],
+    [
+     6.74,
+     6.74
+    ],
+    [
+     6.93,
+     6.93
+    ],
+    [
+     5.43,
+     5.43
+    ],
+    [
+     4.06,
+     4.06
+    ],
+    [
+     1.41,
+     1.41
+    ],
+    [
+     4.52,
+     4.52
+    ],
+    [
+     5.66,
+     5.66
+    ],
+    [
+     5.13,
+     5.13
+    ]
+   ]
+  },
+  "asymmetric": {
+   "coverage": {
+    "coverage": 0.8044812330526616,
+    "mean_width": 69.00826696592026,
+    "below": 0.08420151277294134,
+    "above": 0.11131725417439703
+   },
+   "pads": [
+    [
+     -2.28,
+     22.48
+    ],
+    [
+     -0.86,
+     21.91
+    ],
+    [
+     4.11,
+     14.0
+    ],
+    [
+     3.99,
+     11.38
+    ],
+    [
+     -0.37,
+     9.49
+    ],
+    [
+     4.8,
+     3.01
+    ],
+    [
+     -0.89,
+     5.31
+    ],
+    [
+     3.34,
+     5.83
+    ],
+    [
+     2.29,
+     11.02
+    ],
+    [
+     1.35,
+     10.65
+    ]
+   ]
+  }
+ },
+ "extrapolation": {
+  "n_above_train_max": 0,
+  "n_total": 7007,
+  "pct": 0.0,
+  "MAE_above": null,
+  "MAE_below": 19.557833033447345
+ }
+}

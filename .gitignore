@@ -1,0 +1,37 @@
+# Data (never commit data — raw parquet and the DuckDB warehouse stay local)
+data/*
+!data/.gitkeep
+
+# Claude Code personal settings
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Dagster local state
+.dagster/
+tmp*/
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# Pytest
+.pytest_cache/
+
+# Working notes and handover material — not part of the public project
+session_summary.txt
+docs/HANDOVER.md
+_to_delete/
+
+# Intermediate decks and their builder scripts (the final deck is committed)
+reports/build_*.py
+reports/data_pipeline_slides.pptx
+reports/eda_slides.pptx
+reports/model_slides.pptx

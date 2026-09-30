@@ -1,0 +1,115 @@
+{
+ "signed_by_band": {
+  "negative": {
+   "n": 110,
+   "mean_signed": 8.179,
+   "mean_price": -1.529
+  },
+  "0-20": {
+   "n": 1130,
+   "mean_signed": 13.925,
+   "mean_price": 8.395
+  },
+  "20-50": {
+   "n": 1480,
+   "mean_signed": 3.127,
+   "mean_price": 35.96
+  },
+  "50-100": {
+   "n": 2796,
+   "mean_signed": -6.814,
+   "mean_price": 74.562
+  },
+  "100-200": {
+   "n": 1433,
+   "mean_signed": -19.585,
+   "mean_price": 125.914
+  },
+  "200+": {
+   "n": 58,
+   "mean_signed": -97.745,
+   "mean_price": 251.884
+  }
+ },
+ "signed_by_fold": [
+  {
+   "fold": "2025-11",
+   "mean_signed": -7.95,
+   "test_mean": 63.4,
+   "train_mean": 37.1,
+   "shift": 26.3
+  },
+  {
+   "fold": "2025-12",
+   "mean_signed": 2.04,
+   "test_mean": 47.4,
+   "train_mean": 38.4,
+   "shift": 9.0
+  },
+  {
+   "fold": "2026-01",
+   "mean_signed": -12.77,
+   "test_mean": 101.5,
+   "train_mean": 38.8,
+   "shift": 62.7
+  },
+  {
+   "fold": "2026-02",
+   "mean_signed": -0.2,
+   "test_mean": 103.7,
+   "train_mean": 41.7,
+   "shift": 62.0
+  },
+  {
+   "fold": "2026-03",
+   "mean_signed": -3.81,
+   "test_mean": 54.5,
+   "train_mean": 44.2,
+   "shift": 10.3
+  },
+  {
+   "fold": "2026-04",
+   "mean_signed": -1.75,
+   "test_mean": 51.7,
+   "train_mean": 44.6,
+   "shift": 7.1
+  },
+  {
+   "fold": "2026-05",
+   "mean_signed": -10.55,
+   "test_mean": 70.9,
+   "train_mean": 44.9,
+   "shift": 26.0
+  },
+  {
+   "fold": "2026-06",
+   "mean_signed": -5.62,
+   "test_mean": 71.3,
+   "train_mean": 45.9,
+   "shift": 25.4
+  },
+  {
+   "fold": "2026-07",
+   "mean_signed": 4.34,
+   "test_mean": 48.5,
+   "train_mean": 46.8,
+   "shift": 1.7
+  },
+  {
+   "fold": "2026-08",
+   "mean_signed": -10.8,
+   "test_mean": 48.5,
+   "train_mean": 46.9,
+   "shift": 1.5
+  }
+ ],
+ "shift_bias_corr": -0.32704214820830274,
+ "rolling_ablation": {
+  "MAE_with": 19.557833033447345,
+  "MAE_without": 19.151814492344823,
+  "diff": -0.40601854110252233,
+  "lo": -0.7081513684515099,
+  "hi": -0.09254454689680214,
+  "significant": true
+ }
+}

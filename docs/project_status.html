@@ -1,0 +1,1066 @@
+<title>SE3 Forecasting Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  color-scheme: light;
+  --plane:#eaeef1; --surface:#f8fafb; --surface-2:#eff3f5; --code-bg:#f1f5f7;
+  --ink:#0d1214; --ink-2:#445159; --muted:#6b7780; --rule:#d5dde2;
+  --accent:#2a78d6; --done:#1baf7a; --now:#eb6834; --warn:#d03b3b;
+  --shadow:0 1px 2px rgba(13,18,20,.05), 0 8px 24px -16px rgba(13,18,20,.25);
+  --display:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --body:"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --plane:#0b0e10; --surface:#15181a; --surface-2:#1c2124; --code-bg:#12171a;
+    --ink:#f2f5f6; --ink-2:#b3bfc6; --muted:#8b979e; --rule:#272d31;
+    --accent:#5fa2ee; --done:#35bd8c; --now:#e8794a; --warn:#e06a6a;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --plane:#0b0e10; --surface:#15181a; --surface-2:#1c2124; --code-bg:#12171a;
+  --ink:#f2f5f6; --ink-2:#b3bfc6; --muted:#8b979e; --rule:#272d31;
+  --accent:#5fa2ee; --done:#35bd8c; --now:#e8794a; --warn:#e06a6a;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--plane); color:var(--ink); font-family:var(--body);
+       font-size:16px; line-height:1.62; -webkit-font-smoothing:antialiased; }
+.wrap { max-width:1000px; margin:0 auto; padding:clamp(28px,5vw,56px) clamp(16px,4vw,30px) 90px; }
+.prose { max-width:70ch; }
+
+header { border-bottom:2px solid var(--ink); padding-bottom:24px; }
+.eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+h1 { font-family:var(--display); font-weight:700; font-size:clamp(31px,5.4vw,50px); line-height:1.04;
+     letter-spacing:-.022em; margin:11px 0 13px; text-wrap:balance; }
+.standfirst { font-size:clamp(15.5px,1.9vw,18px); color:var(--ink-2); max-width:62ch; margin:0; }
+
+.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(146px,1fr)); gap:1px;
+         background:var(--rule); border:1px solid var(--rule); margin:26px 0 0; }
+.stat { background:var(--surface); padding:15px 17px; display:flex; flex-direction:column; gap:1px; }
+.stat b { font-family:var(--display); font-weight:700; font-size:25px; line-height:1.1; letter-spacing:-.02em; }
+.stat span { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+.stat.hero b { color:var(--done); }
+
+section { margin-top:52px; }
+h2 { font-family:var(--display); font-weight:700; font-size:clamp(22px,3.1vw,29px); line-height:1.16;
+     letter-spacing:-.018em; margin:0 0 11px; text-wrap:balance; }
+h3 { font-family:var(--body); font-weight:600; font-size:16px; margin:26px 0 8px; }
+p { margin:0 0 13px; }
+ul,ol { padding-left:20px; margin:0 0 13px; max-width:70ch; }
+li { margin-bottom:5px; }
+a { color:var(--accent); }
+code { font-family:var(--mono); font-size:12.5px; background:var(--code-bg);
+       border:1px solid var(--rule); border-radius:3px; padding:1px 5px; }
+
+.panel { background:var(--surface); border:1px solid var(--rule); border-radius:3px;
+         padding:18px 20px; box-shadow:var(--shadow); margin:18px 0; overflow-x:auto; }
+.panel svg { display:block; min-width:640px; width:100%; height:auto; }
+.panel text { font-family:var(--mono); }
+.cap { font-size:14px; color:var(--ink-2); max-width:70ch; margin:10px 0 0; }
+
+.stages { display:flex; flex-direction:column; gap:1px; background:var(--rule);
+          border:1px solid var(--rule); margin:20px 0 0; }
+.stage { background:var(--surface); padding:15px 18px; display:grid;
+         grid-template-columns:34px 1fr auto; gap:15px; align-items:start; }
+.stage.is-now { background:var(--surface-2); }
+.snum { font-family:var(--mono); font-size:12px; font-weight:500; color:var(--muted);
+        border:1px solid var(--rule); border-radius:50%; width:29px; height:29px;
+        display:flex; align-items:center; justify-content:center; }
+.stage.is-done .snum { background:var(--done); border-color:var(--done); color:#fff; }
+.stage.is-now .snum { background:var(--now); border-color:var(--now); color:#fff; }
+.sbody h4 { font-family:var(--body); font-weight:600; font-size:15.5px; margin:3px 0 4px; }
+.sbody p { margin:0 0 6px; font-size:14.5px; color:var(--ink-2); }
+.sbody .out { font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-top:6px; display:block; }
+.pill { font-family:var(--mono); font-size:10px; letter-spacing:.09em; text-transform:uppercase;
+        padding:3px 9px; border-radius:20px; white-space:nowrap; border:1px solid var(--rule); color:var(--muted); }
+.stage.is-done .pill { background:var(--done); border-color:var(--done); color:#fff; }
+.stage.is-now .pill { background:var(--now); border-color:var(--now); color:#fff; }
+
+.grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; margin-top:18px; }
+.card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:16px 18px; box-shadow:var(--shadow); }
+.card h4 { font-family:var(--body); font-weight:600; font-size:15px; margin:0 0 7px; }
+.card p, .card li { font-size:14.5px; color:var(--ink-2); }
+.card ul { margin:0; padding-left:18px; }
+
+.finding { border-left:3px solid var(--accent); background:var(--surface); padding:14px 17px;
+           margin:14px 0; border-radius:0 3px 3px 0; box-shadow:var(--shadow); }
+.finding b { font-weight:600; }
+.finding .lab { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+                color:var(--accent); display:block; margin-bottom:5px; }
+.finding p { margin:0 0 10px; font-size:15px; }
+.finding p:last-child { margin:0; }
+.finding.big { border-left-color:var(--done); }
+.finding.big .lab { color:var(--done); }
+
+.ask { border-left:3px solid var(--warn); background:var(--surface-2); padding:14px 17px;
+       margin:14px 0; border-radius:0 3px 3px 0; }
+.ask b { color:var(--warn); font-weight:600; }
+.ask p { margin:0 0 6px; font-size:15px; }
+.ask p:last-child { margin:0; }
+
+.tbl { overflow-x:auto; margin:16px 0; }
+table { border-collapse:collapse; width:100%; font-size:14.5px; }
+th,td { padding:9px 13px; text-align:left; border-bottom:1px solid var(--rule); vertical-align:top; }
+thead th { font-family:var(--mono); font-size:10.5px; letter-spacing:.07em; text-transform:uppercase;
+           color:var(--muted); font-weight:400; border-bottom:1px solid var(--ink-2); }
+th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+td.num { font-family:var(--mono); font-size:13px; }
+tr.win td { background:var(--surface-2); font-weight:600; }
+tr.win td.num { color:var(--done); }
+
+.calc { background:var(--surface-2); border:1px solid var(--rule); border-radius:3px;
+        padding:14px 18px; margin:14px 0; font-family:var(--mono); font-size:14px;
+        font-variant-numeric:tabular-nums; line-height:1.9; overflow-x:auto; }
+.calc .dim { color:var(--muted); font-size:12.5px; }
+.step-h { font-family:var(--display); font-weight:700; font-size:18px; margin:30px 0 8px;
+          padding-top:14px; border-top:1px solid var(--rule); letter-spacing:-.01em; }
+.bar { height:9px; background:var(--done); border-radius:2px; display:block; }
+.bar.over { background:var(--now); }
+footer { margin-top:64px; padding-top:20px; border-top:1px solid var(--rule);
+         font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.9; }
+@media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Internship project &middot; Status as of 25 August 2026</div>
+  <h1>Forecasting SE3 day-ahead prices</h1>
+  <p class="standfirst">Where the project stands, what has been built and measured, what the
+  validation found &mdash; including three results that overturned earlier conclusions &mdash; and
+  what remains.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><b>5 / 7</b><span>stages complete</span></div>
+  <div class="stat hero"><b>19.56</b><span>MAE vs 26.28 naive</span></div>
+  <div class="stat hero"><b>80.4%</b><span>interval coverage</span></div>
+  <div class="stat"><b>1.83M</b><span>rows collected</span></div>
+  <div class="stat"><b>20,900</b><span>training rows</span></div>
+  <div class="stat"><b>47 / 47</b><span>tests passing</span></div>
+</div>
+
+<section>
+  <h2>The task</h2>
+  <div class="prose">
+    <p><b>At around 11:00 on day D &mdash; before the Nord Pool day-ahead auction closes at 12:00 &mdash;
+    forecast the 24 hourly prices for delivery day D+1 in bidding area SE3.</b></p>
+    <p>Every feature must be knowable before that cutoff. That constraint drives the whole design, and
+    it is enforced by an automated audit that refuses to build the training table if any feature
+    reaches past it. All four Swedish bidding areas (SE1&ndash;SE4) are collected so neighbouring-area
+    prices can be used as predictors.</p>
+    <p><b>"Available at the cutoff" is not the same as "about the past."</b> A weather <em>forecast</em>
+    for tomorrow, published before 11:00, genuinely existed at 11:00 &mdash; so using it is legitimate.
+    Only tomorrow's actual <em>observations</em> are unavailable. Getting that distinction right turned
+    out to be the single largest improvement in the project.</p>
+  </div>
+
+  <div class="panel">
+    <svg viewBox="0 0 1080 344" role="img" aria-label="Timeline from day D minus 1 to day D plus 1. Day D prices publish at 13:00 on day D minus 1. The forecast is made at 11:00 on day D, one hour before the auction closes. Price history and weather observations up to the cutoff are valid inputs; a weather forecast issued before the cutoff is valid; tomorrow's actual observations are leakage.">
+      <defs><marker id="c1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <rect x="60" y="30" width="192" height="26" fill="var(--surface-2)"/>
+      <rect x="252" y="30" width="384" height="26" fill="var(--surface-2)"/>
+      <rect x="636" y="30" width="384" height="26" fill="var(--done)" fill-opacity=".16"/>
+      <g font-size="12" text-anchor="middle" fill="currentColor">
+        <text x="156" y="48" opacity=".6">day D&minus;1</text>
+        <text x="444" y="48">day D &mdash; today</text>
+        <text x="828" y="48" fill="var(--done)">day D+1 &mdash; what I predict</text>
+      </g>
+      <line x1="60" y1="88" x2="1020" y2="88" stroke="currentColor" stroke-width="1.5" opacity=".5"/>
+      <g stroke="currentColor" opacity=".25" stroke-dasharray="3 4">
+        <line x1="252" y1="60" x2="252" y2="292"/><line x1="636" y1="60" x2="636" y2="292"/>
+      </g>
+      <line x1="76" y1="76" x2="76" y2="100" stroke="currentColor" stroke-width="2"/>
+      <text x="76" y="70" font-size="10.5" fill="currentColor" opacity=".6" text-anchor="middle">13:00</text>
+      <text x="84" y="118" font-size="10.5" fill="currentColor" opacity=".6">day D prices publish</text>
+      <line x1="428" y1="68" x2="428" y2="302" stroke="var(--now)" stroke-width="2.5"/>
+      <circle cx="428" cy="88" r="5" fill="var(--now)"/>
+      <text x="428" y="70" font-size="12.5" font-weight="600" fill="var(--now)" text-anchor="middle">11:00 CUTOFF</text>
+      <line x1="444" y1="78" x2="444" y2="98" stroke="currentColor" stroke-width="1.5" opacity=".6"/>
+      <text x="452" y="118" font-size="10.5" fill="currentColor" opacity=".6">12:00 auction closes</text>
+      <g font-size="11.5" font-weight="600" fill="currentColor">
+        <text x="60" y="150">SE3 prices</text><text x="60" y="196">Weather observed</text>
+        <text x="60" y="242">Weather forecast</text><text x="60" y="288">Tomorrow's readings</text>
+      </g>
+      <rect x="200" y="136" width="436" height="18" rx="2" fill="var(--done)" fill-opacity=".85"/>
+      <text x="646" y="150" font-size="10.5" fill="var(--done)">valid &mdash; all of day D is already published, so a 24 h lag is safe</text>
+      <rect x="200" y="182" width="228" height="18" rx="2" fill="var(--done)" fill-opacity=".85"/>
+      <text x="440" y="196" font-size="10.5" fill="var(--done)">valid, but stops dead at the cutoff &rarr; summarised as 24 h aggregates</text>
+      <circle cx="200" cy="237" r="5" fill="var(--done)"/>
+      <text x="150" y="228" font-size="10" fill="currentColor" opacity=".6" text-anchor="end">issued</text>
+      <path d="M208 237 H628" stroke="var(--done)" stroke-width="1.5" stroke-dasharray="4 4" fill="none" marker-end="url(#c1)"/>
+      <rect x="636" y="228" width="384" height="18" rx="2" fill="var(--done)" fill-opacity=".85"/>
+      <text x="640" y="266" font-size="10.5" fill="var(--done)">VALID &mdash; it existed at the cutoff, and it describes the delivery day</text>
+      <rect x="636" y="274" width="384" height="18" rx="2" fill="none" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <text x="828" y="287" font-size="10.5" fill="var(--warn)" text-anchor="middle">LEAKAGE &mdash; only knowable afterwards</text>
+      <path d="M434 310 H1014" stroke="currentColor" opacity=".55" stroke-width="1" fill="none" marker-start="url(#c1)" marker-end="url(#c1)"/>
+      <text x="724" y="330" font-size="10.5" fill="currentColor" opacity=".6" text-anchor="middle">the cutoff sits 13 to 36 hours before the hours being predicted</text>
+    </svg>
+    <p class="cap">The third lane is the distinction that took two attempts to get right. Treating both
+    the forecast and the observation as leakage &mdash; the original design &mdash; threw away the
+    project's largest signal.</p>
+  </div>
+</section>
+
+<section>
+  <h2>How the pipeline is built</h2>
+  <div class="panel">
+    <svg viewBox="0 0 760 268" role="img" aria-label="Four external data sources feed a fetch and normalize layer, then a schema validation layer, then storage as parquet files and a DuckDB warehouse, which feeds feature building and the model. A command line and Dagster both drive the same collection code.">
+      <defs><marker id="p1" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+        <path d="M0,0 L7,3.5 L0,7 z" fill="currentColor"/></marker></defs>
+      <g font-size="10.5" fill="currentColor">
+        <text x="14" y="20" font-size="9.5" opacity=".65">SOURCES</text>
+        <rect x="14" y="30" width="128" height="28" rx="3" fill="none" stroke="currentColor" opacity=".45"/>
+        <text x="78" y="48" text-anchor="middle">elprisetjustnu.se</text>
+        <rect x="14" y="66" width="128" height="28" rx="3" fill="none" stroke="currentColor" opacity=".45"/>
+        <text x="78" y="84" text-anchor="middle">Nord Pool API</text>
+        <rect x="14" y="102" width="128" height="28" rx="3" fill="none" stroke="currentColor" opacity=".45"/>
+        <text x="78" y="120" text-anchor="middle">SMHI observations</text>
+        <rect x="14" y="138" width="128" height="28" rx="3" fill="none" stroke="var(--done)"/>
+        <text x="78" y="156" text-anchor="middle" font-size="9.5" fill="var(--done)">Open-Meteo forecasts</text>
+        <text x="196" y="20" font-size="9.5" opacity=".65">INGESTION</text>
+        <rect x="196" y="48" width="132" height="64" rx="3" fill="none" stroke="currentColor" opacity=".45"/>
+        <text x="262" y="74" text-anchor="middle">fetch + retry</text>
+        <text x="262" y="92" text-anchor="middle">normalize</text>
+        <text x="382" y="20" font-size="9.5" opacity=".65">CONTRACT</text>
+        <rect x="382" y="48" width="126" height="64" rx="3" fill="none" stroke="currentColor" opacity=".45"/>
+        <text x="445" y="74" text-anchor="middle">schema</text>
+        <text x="445" y="92" text-anchor="middle">validate()</text>
+        <text x="562" y="20" font-size="9.5" opacity=".65">STORAGE</text>
+        <rect x="562" y="42" width="184" height="28" rx="3" fill="none" stroke="currentColor" opacity=".45"/>
+        <text x="654" y="60" text-anchor="middle">data/raw/*.parquet</text>
+        <rect x="562" y="90" width="184" height="28" rx="3" fill="none" stroke="currentColor" opacity=".45"/>
+        <text x="654" y="108" text-anchor="middle">DuckDB warehouse</text>
+        <text x="196" y="168" font-size="9.5" opacity=".65">DRIVEN BY</text>
+        <rect x="196" y="178" width="132" height="26" rx="3" fill="none" stroke="currentColor" opacity=".45"/>
+        <text x="262" y="195" text-anchor="middle">CLI (backfills)</text>
+        <rect x="196" y="212" width="132" height="26" rx="3" fill="none" stroke="currentColor" opacity=".45"/>
+        <text x="262" y="229" text-anchor="middle">Dagster (daily)</text>
+        <text x="562" y="168" font-size="9.5" opacity=".65">DOWNSTREAM</text>
+        <rect x="562" y="172" width="184" height="26" rx="3" fill="none" stroke="currentColor" opacity=".45"/>
+        <text x="654" y="189" text-anchor="middle">feature table &middot; 20,900 &times; 70</text>
+        <rect x="562" y="212" width="184" height="26" rx="3" fill="none" stroke="var(--done)"/>
+        <text x="654" y="229" text-anchor="middle" fill="var(--done)">model &middot; MAE 19.56</text>
+      </g>
+      <g fill="none" stroke="currentColor" stroke-width="1.3" marker-end="url(#p1)" opacity=".5">
+        <path d="M142 44 H170 V80 H196"/><path d="M142 80 H196"/>
+        <path d="M142 116 H170 V80 H196"/><path d="M142 152 H170 V80 H196"/>
+        <line x1="328" y1="80" x2="382" y2="80"/>
+        <path d="M508 80 H535 V56 H562"/><path d="M508 80 H535 V104 H562"/>
+        <line x1="654" y1="118" x2="654" y2="168"/><line x1="654" y1="198" x2="654" y2="208"/>
+      </g>
+      <g fill="none" stroke="currentColor" stroke-width="1.3" opacity=".45" stroke-dasharray="3 3">
+        <path d="M328 191 H352"/><path d="M328 225 H352"/>
+      </g>
+      <g fill="none" stroke="currentColor" stroke-width="1.3" opacity=".45" stroke-dasharray="3 3" marker-end="url(#p1)">
+        <path d="M352 225 V132 H262 V116"/>
+      </g>
+    </svg>
+    <p class="cap">The command line and the scheduler call the <em>same</em> collection functions, so
+    manual backfills and automatic daily runs cannot diverge. Every arrow is re-runnable: writes
+    replace a partition rather than appending, so any day can be rebuilt safely.
+    <br><br><b>An honest gap:</b> Dagster schedules two of the four sources &mdash; Nord Pool prices at
+    13:30 and SMHI weather at 00:30. The historical price source and the forecast archive are driven by
+    the CLI only, because both are backfills rather than daily feeds.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Progress</h2>
+  <div class="stages">
+    <div class="stage is-done"><div class="snum">1</div><div class="sbody">
+      <h4>Platform conventions</h4>
+      <p>Studied the internal platform documents and extracted 11 conventions to mirror; recorded which
+      parts are adopted as-is and which are substituted, with reasons.</p>
+      <span class="out">&rarr; docs/01_platform_conventions.md</span></div><span class="pill">Done</span></div>
+
+    <div class="stage is-done"><div class="snum">2</div><div class="sbody">
+      <h4>Data access &amp; ingestion</h4>
+      <p>Config-driven ingestion for four sources, schema contracts, a CLI for backfills, and Dagster
+      assets/jobs/schedules with retries and daily partitions. Three years of prices and weather
+      backfilled and cross-validated, later joined by an archive of past weather forecasts.</p>
+      <span class="out">&rarr; docs/02_data_access.md &middot; config/ schemas/ ingestion/ orchestration/</span></div><span class="pill">Done</span></div>
+
+    <div class="stage is-done"><div class="snum">3</div><div class="sbody">
+      <h4>Exploratory data analysis</h4>
+      <p>26,013 hours profiled: data-quality audit, price distributions, daily/weekly/seasonal structure,
+      area correlations, weather relationships, and the lag structure that defines what a forecast can
+      legitimately use.</p>
+      <span class="out">&rarr; docs/03_eda.md &middot; reports/03_eda.html &middot; notebooks/03_eda.py</span></div><span class="pill">Done</span></div>
+
+    <div class="stage is-done"><div class="snum">4</div><div class="sbody">
+      <h4>Feature engineering</h4>
+      <p>Hourly grid built with an explicit rule for overlapping and sub-hourly periods; 20,900 training
+      rows &times; 70 features. An automated leakage audit refuses to build the table if any feature reaches
+      past the cutoff &mdash; it caught three real bugs, none of which crashed anything.</p>
+      <span class="out">&rarr; docs/04_features.md &middot; features/build_features.py &middot; tests/test_features.py</span></div><span class="pill">Done</span></div>
+
+    <div class="stage is-done"><div class="snum">5</div><div class="sbody">
+      <h4>Modelling</h4>
+      <p>Walk-forward validation across 15 folds, tuned on 5 and reported on 10 that were never seen
+      while tuning. <b>MAE 19.56 against a naive baseline of 26.28 &mdash; a 25.6% improvement that holds
+      on all ten folds.</b> Prediction intervals failed calibration twice before reaching 80.4% against a
+      stated 80%.</p>
+      <span class="out">&rarr; docs/05_modeling.md &middot; models/ &middot; reports/stage5_results.json</span></div><span class="pill">Done</span></div>
+
+    <div class="stage is-now"><div class="snum">6</div><div class="sbody">
+      <h4>Validation &amp; error analysis</h4>
+      <p>Error by hour, month and price level; permutation importance checked against the stage 3
+      physics; family ablations; an asymmetric interval. <b>Three earlier conclusions were
+      overturned</b> — observed weather now earns its place, the northern-wind finding does not
+      transfer, and the extrapolation explanation was refuted outright.</p>
+      <span class="out">&rarr; docs/06_validation.md &middot; models/run_stage6.py</span></div><span class="pill">Next</span></div>
+
+    <div class="stage"><div class="snum">7</div><div class="sbody">
+      <h4>Report &amp; presentation</h4>
+      <p>Written report and slides, including what would change with production data and infrastructure.</p>
+      <span class="out">&rarr; reports/</span></div><span class="pill">Planned</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Stage 5 results</h2>
+  <div class="prose">
+    <p>Three baselines, none of them strawmen. The one that counts is <b>"tomorrow at 18:00 will cost
+    whatever today at 18:00 cost"</b> &mdash; it needs no data pipeline at all, and the lag-24
+    autocorrelation is 0.677. Any model that does not clear it comfortably has not earned its existence.</p>
+  </div>
+
+  <h3>Why walk-forward, and not a single holdout</h3>
+  <p class="prose">The single split used in stage 4 turned out not to be representative: its test window
+  had nearly double the training median price and almost no negative hours. That is a change of regime,
+  not a sampling wobble, so one score says as much about the window as about the model.</p>
+
+  <div class="panel">
+    <svg viewBox="0 0 1000 350" role="img" aria-label="Fifteen walk-forward folds. Each trains on all months before a test month and tests on the next single month. The first five folds, June to October 2025, are used for tuning. The remaining ten, November 2025 to August 2026, are held back for reporting.">
+      <g font-size="10" fill="currentColor" opacity=".65">
+        <text x="150" y="34">2024-04</text><text x="384" y="34" text-anchor="middle">2025-01</text>
+        <text x="696" y="34" text-anchor="middle">2026-01</text><text x="904" y="34" text-anchor="end">2026-08</text>
+      </g>
+      <line x1="150" y1="42" x2="904" y2="42" stroke="currentColor" opacity=".25"/>
+      <rect x="150" y="54" width="364" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="514" y="54" width="26" height="12" rx="2" fill="var(--now)"/><rect x="150" y="72" width="390" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="540" y="72" width="26" height="12" rx="2" fill="var(--now)"/><rect x="150" y="90" width="416" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="566" y="90" width="26" height="12" rx="2" fill="var(--now)"/><rect x="150" y="108" width="442" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="592" y="108" width="26" height="12" rx="2" fill="var(--now)"/><rect x="150" y="126" width="468" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="618" y="126" width="26" height="12" rx="2" fill="var(--now)"/><rect x="150" y="144" width="494" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="644" y="144" width="26" height="12" rx="2" fill="var(--done)"/><rect x="150" y="162" width="520" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="670" y="162" width="26" height="12" rx="2" fill="var(--done)"/><rect x="150" y="180" width="546" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="696" y="180" width="26" height="12" rx="2" fill="var(--done)"/><rect x="150" y="198" width="572" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="722" y="198" width="26" height="12" rx="2" fill="var(--done)"/><rect x="150" y="216" width="598" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="748" y="216" width="26" height="12" rx="2" fill="var(--done)"/><rect x="150" y="234" width="624" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="774" y="234" width="26" height="12" rx="2" fill="var(--done)"/><rect x="150" y="252" width="650" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="800" y="252" width="26" height="12" rx="2" fill="var(--done)"/><rect x="150" y="270" width="676" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="826" y="270" width="26" height="12" rx="2" fill="var(--done)"/><rect x="150" y="288" width="702" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="852" y="288" width="26" height="12" rx="2" fill="var(--done)"/><rect x="150" y="306" width="728" height="12" rx="2" fill="currentColor" fill-opacity=".15"/><rect x="878" y="306" width="26" height="12" rx="2" fill="var(--done)"/>
+      <g font-size="9.5" fill="currentColor" opacity=".6" text-anchor="end"><text x="142" y="63">2025-06</text><text x="142" y="81">2025-07</text><text x="142" y="99">2025-08</text><text x="142" y="117">2025-09</text><text x="142" y="135">2025-10</text><text x="142" y="153">2025-11</text><text x="142" y="171">2025-12</text><text x="142" y="189">2026-01</text><text x="142" y="207">2026-02</text><text x="142" y="225">2026-03</text><text x="142" y="243">2026-04</text><text x="142" y="261">2026-05</text><text x="142" y="279">2026-06</text><text x="142" y="297">2026-07</text><text x="142" y="315">2026-08</text></g>
+      <path d="M918 54 H930 V138 H918" stroke="var(--now)" stroke-width="1.5" fill="none"/>
+      <text x="938" y="90" font-size="11.5" font-weight="600" fill="var(--now)">5 folds</text>
+      <text x="938" y="106" font-size="10" fill="var(--now)">tuning</text>
+      <path d="M918 144 H930 V318 H918" stroke="var(--done)" stroke-width="1.5" fill="none"/>
+      <text x="938" y="218" font-size="11.5" font-weight="600" fill="var(--done)">10 folds</text>
+      <text x="938" y="234" font-size="10" fill="var(--done)">reporting &mdash;</text>
+      <text x="938" y="248" font-size="10" fill="var(--done)">never seen</text>
+      <text x="938" y="262" font-size="10" fill="var(--done)">while tuning</text>
+      <rect x="150" y="332" width="20" height="10" rx="2" fill="currentColor" fill-opacity=".15"/>
+      <text x="178" y="341" font-size="10" fill="currentColor" opacity=".6">train (expanding)</text>
+      <rect x="300" y="332" width="20" height="10" rx="2" fill="var(--done)"/>
+      <text x="328" y="341" font-size="10" fill="currentColor" opacity=".6">test (one month, always in the future)</text>
+    </svg>
+    <p class="cap">The justification is in the benchmark's own numbers: the same naive rule scored
+    anywhere from <b>14.0 to 35.8</b> depending on which single month was chosen. One split could have
+    proved almost anything. Hyperparameters were chosen on the orange folds and frozen before the green
+    ones were touched.</p>
+  </div>
+
+  <h3>Scores on the ten untouched folds</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Predictor</th><th class="num">MAE</th><th class="num">RMSE</th><th class="num">fold sd</th><th class="num">worst fold</th><th class="num">median day</th><th class="num">p90 day</th></tr></thead>
+    <tbody>
+      <tr><td>naive &mdash; yesterday, same hour</td><td class="num">26.28</td><td class="num">36.90</td><td class="num">3.12</td><td class="num">33.7</td><td class="num">23.05</td><td class="num">46.93</td></tr>
+      <tr><td>naive &mdash; last week, same hour</td><td class="num">34.63</td><td class="num">47.80</td><td class="num">4.49</td><td class="num">41.8</td><td class="num">27.47</td><td class="num">71.76</td></tr>
+      <tr><td>naive &mdash; training mean</td><td class="num">39.89</td><td class="num">51.93</td><td class="num">13.26</td><td class="num">64.8</td><td class="num">32.86</td><td class="num">74.20</td></tr>
+      <tr><td>ridge on the same 70 features</td><td class="num">19.67</td><td class="num">27.31</td><td class="num">3.13</td><td class="num">24.2</td><td class="num">16.79</td><td class="num">34.42</td></tr>
+      <tr class="win"><td>gradient boosting &mdash; single model</td><td class="num">19.56</td><td class="num">26.73</td><td class="num">1.92</td><td class="num">22.2</td><td class="num">16.80</td><td class="num">31.59</td></tr>
+      <tr><td>gradient boosting &mdash; grouped by hour</td><td class="num">19.83</td><td class="num">27.00</td><td class="num">2.36</td><td class="num">23.5</td><td class="num">17.32</td><td class="num">34.39</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>The noise rule, instead of a success threshold</h3>
+  <p class="prose">A fixed target was considered and rejected as circular &mdash; any threshold would have
+  been set just under what had already been achieved. Instead: <b>keep a change only when its improvement
+  survives a block bootstrap over whole days.</b> Whole days, never individual hours, because neighbouring
+  hours correlate about 0.95; resampling hours independently would pretend there is far more independent
+  evidence than there is and would rubber-stamp everything.</p>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Comparison</th><th class="num">&Delta; MAE</th><th>95% CI</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>single model vs best naive</td><td class="num">+6.72</td><td>[+5.13, +8.42]</td><td><b>real</b></td></tr>
+      <tr><td>ridge control vs best naive</td><td class="num">+6.61</td><td>[+5.10, +8.20]</td><td><b>real</b></td></tr>
+      <tr><td>grouped model vs best naive</td><td class="num">+6.44</td><td>[+4.87, +8.21]</td><td>real</td></tr>
+      <tr><td>boosting vs ridge, identical features</td><td class="num">+0.11</td><td>[&minus;0.72, +0.93]</td><td>not distinguishable from noise</td></tr>
+      <tr><td>grouped vs single</td><td class="num">&minus;0.28</td><td>[&minus;0.79, +0.25]</td><td>not distinguishable from noise</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Fold by fold</h3>
+  <p class="prose">An average can hide a model that wins hugely in three months and loses in seven. It
+  does not here &mdash; <b>the model wins on all ten reporting folds, by between 10.7% and 37.5%.</b></p>
+  <div class="tbl"><table>
+    <thead><tr><th>Fold</th><th class="num">naive</th><th class="num">model</th><th class="num">gain</th><th>Fold</th><th class="num">naive</th><th class="num">model</th><th class="num">gain</th></tr></thead>
+    <tbody>
+      <tr><td>2025-11</td><td class="num">33.69</td><td class="num">21.05</td><td class="num">+37.5%</td><td>2026-04</td><td class="num">25.81</td><td class="num">18.56</td><td class="num">+28.1%</td></tr>
+      <tr><td>2025-12</td><td class="num">24.44</td><td class="num">18.71</td><td class="num">+23.4%</td><td>2026-05</td><td class="num">26.15</td><td class="num">20.58</td><td class="num">+21.3%</td></tr>
+      <tr><td>2026-01</td><td class="num">24.89</td><td class="num">22.22</td><td class="num">+10.7%</td><td>2026-06</td><td class="num">29.29</td><td class="num">20.49</td><td class="num">+30.1%</td></tr>
+      <tr><td>2026-02</td><td class="num">25.44</td><td class="num">20.06</td><td class="num">+21.1%</td><td>2026-07</td><td class="num">21.06</td><td class="num">16.52</td><td class="num">+21.6%</td></tr>
+      <tr><td>2026-03</td><td class="num">25.96</td><td class="num">16.52</td><td class="num">+36.3%</td><td>2026-08</td><td class="num">26.29</td><td class="num">21.84</td><td class="num">+16.9%</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose" style="font-size:14.5px;color:var(--ink-2)">The weakest month is 2026-01 &mdash;
+  midwinter, the hardest and most valuable period &mdash; which is carried into stage 6. Grouping hours
+  into night/morning/midday/evening was a clean <b>negative</b> result: the evening-peak weakness is real,
+  but splitting the training data four ways costs more than the specialisation gains. The code is kept so
+  the null result stays reproducible.</p>
+</section>
+
+<section>
+  <h2>The control that reframed the stage</h2>
+  <p class="prose">"Gradient boosting beats the naive baseline by 25.6%" is ambiguous as it stands. It
+  could be the algorithm &mdash; or it could be the feature engineering, which <em>any</em> model would
+  have benefited from. Nothing in the stage separated the two, so ridge regression was run on the
+  identical 70 features, tuned with the same discipline on the same five tuning folds.</p>
+
+  <div class="finding big">
+    <span class="lab">Measured &middot; changed how the stage should be reported</span>
+    <p><b>Of the 6.72 EUR/MWh the model gains over the naive baseline, 6.61 is available to a linear
+    model on the same features.</b> Gradient boosting is worth <code>+0.11</code>, 95% CI
+    <code>[&minus;0.72, +0.93]</code> &mdash; not distinguishable from noise.</p>
+    <p>Almost all the value in this project came from the feature engineering and the leakage discipline
+    of stage 4 &mdash; above all the archived weather forecasts &mdash; and almost none from the learning
+    algorithm. That is the opposite of where effort usually goes, which is exactly why it was worth
+    measuring rather than assuming.</p>
+  </div>
+
+  <p class="prose"><b>Boosting still ships, on a different argument.</b> Look at the spread rather than
+  the centre: ridge swings from 14.4 to 24.2 across folds where boosting holds 16.5 to 22.2, and ridge's
+  bad days are worse (p90 day 34.42 against 31.59). Ridge owns both the best single fold and the worst.
+  Boosting is not more <em>accurate</em> &mdash; it is more <em>consistent across regimes and better when
+  things go wrong</em>, which for a number someone bids against is the property worth having. Keeping it
+  on a stability argument is defensible; keeping it on an accuracy argument would not have been.</p>
+
+  <p class="prose" style="font-size:14.5px;color:var(--ink-2)">Two things gradient boosting handled for
+  free had to be done explicitly for ridge, both fitted inside the pipeline so they only ever see the
+  training fold: <b>median imputation</b> (ten weather columns have real gaps up to 13.1%; trees learn a
+  direction to send a missing value, ridge cannot accept one at all) and <b>standardisation</b> (features
+  run from prices in the hundreds to sine encodings in [&minus;1, 1], and ridge penalises each
+  coefficient equally). Chosen alpha 1000, with the grid deliberately extended past it on both sides
+  &mdash; a best value sitting at the edge of its grid is a statement about the grid, not the model.</p>
+</section>
+
+<section>
+  <h2>Prediction intervals</h2>
+  <p class="prose">A point forecast whose typical miss is a third of the price level invites false
+  confidence. The standard was fixed <em>before</em> anything ran, so it could not be renegotiated
+  afterwards: <b>an interval that claims 80% and delivers 55% is worse than no interval at all.</b></p>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Interval</th><th class="num">Stated</th><th class="num">Actual</th><th class="num">Below</th><th class="num">Above</th><th class="num">Width</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>quantile, MAE early stopping</td><td class="num">80%</td><td class="num">57.9%</td><td class="num">13.7%</td><td class="num">28.5%</td><td class="num">39.5</td><td>unusable</td></tr>
+      <tr><td>quantile, pinball early stopping</td><td class="num">80%</td><td class="num">70.3%</td><td class="num">13.2%</td><td class="num">16.5%</td><td class="num">51.7</td><td>overconfident</td></tr>
+      <tr class="win"><td>+ conformal calibration</td><td class="num">80%</td><td class="num">80.4%</td><td class="num">5.5%</td><td class="num">14.1%</td><td class="num">66.4</td><td>calibrated</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="finding">
+    <span class="lab">Failure 1 &middot; a real bug, now fixed</span>
+    <p><b>Early stopping graded every model with MAE, regardless of the loss being fitted.</b> MAE is
+    minimised by the median, so judging a 90th-percentile model by MAE stops it exactly where it is
+    <em>least</em> like a 90th-percentile model. Every quantile model stopped at the wrong number of
+    trees. The fix scores the validation slice with <b>pinball loss at the model's own quantile</b>.</p>
+    <p>The clue was the shape of the failure: twice as many outcomes fell above the interval as below,
+    which says the ceiling specifically was too low rather than the range being uniformly narrow. The bug
+    was invisible &mdash; nothing crashed, the point forecast was unaffected, and the intervals looked
+    like plausible intervals. It was caught only because coverage was measured against a number fixed in
+    advance.</p>
+  </div>
+
+  <div class="finding">
+    <span class="lab">Failure 2 &middot; not a bug at all</span>
+    <p><b>Quantile regression is overconfident by construction.</b> Its quantiles are fitted on training
+    rows, so they describe how wrong the model <em>was on data it had already seen</em>, which is always
+    less wrong than it will be tomorrow.</p>
+    <p><b>Conformal calibration</b> corrects it by measurement rather than trust: hold back the last 15%
+    of the training period in time order, measure how far outside the interval the truth actually fell on
+    those unseen rows, and pad by exactly that much. The padding is signed, so an interval that was
+    already too wide would shrink. It was <b>positive on all ten folds</b> (+1.41 to +7.48) &mdash; the
+    raw quantiles were too narrow in every single month. The calibration slice is deliberately the most
+    <em>recent</em> stretch, because this project has already been bitten once by a regime change.</p>
+  </div>
+
+  <h3>Three caveats that travel with the 80.4%</h3>
+  <ul class="prose">
+    <li><b>The interval is wide</b> &mdash; 66.4 EUR/MWh against a test-period mean price near 59. That
+    is the measurement, not a flaw in the method: day-ahead prices genuinely are that uncertain 13&ndash;36
+    hours out, and the earlier narrower intervals were narrow by being <em>wrong</em>. It does limit how
+    much a bidding decision can lean on them.</li>
+    <li><b>It is still asymmetric</b> &mdash; 5.5% below, 14.1% above. The padding is symmetric, so it
+    overcorrects the floor and undercorrects the ceiling. Prices are right-skewed (SE3 reaches &euro;707
+    against a median near 36). A separate pad per side is the obvious next step and is not done.</li>
+    <li><b>It costs the point forecast</b> &mdash; holding 15% back for calibration moves the median model
+    from MAE 19.56 to 20.40. The plain model and the interval wrapper ship separately;
+    <b>the point forecast must not be read off the interval's midpoint.</b></li>
+  </ul>
+</section>
+
+<section>
+  <h2>How the model actually decides</h2>
+  <p class="prose">Everything above says the model works. This traces <em>how</em>, through one real
+  hour, using the real fitted model &mdash; every number below was read out of the trained object, not
+  invented for the explanation.</p>
+
+  <div class="grid2">
+    <div class="card"><h4>The hour being predicted</h4>
+      <p><b>Thursday 15 January 2026, 18:00.</b> Evening peak, midwinter &mdash; the hardest and most
+      valuable kind of hour. It falls in a reporting fold, so the model had never seen it.</p></div>
+    <div class="card"><h4>What it was worth</h4>
+      <p>Actual price <b>104.42 EUR/MWh</b>, against 15,357 training rows and 70 features describing
+      that hour.</p></div>
+  </div>
+
+  <div class="step-h">Step 0 &middot; one guess for every hour</div>
+  <p class="prose">Before a single tree exists, the model predicts the same number for everything: the
+  average price across its training rows.</p>
+  <div class="calc">starting guess = mean of 15,357 training prices = <b>38.81</b><br>
+    <span class="dim">actual 104.42 &rarr; this guess is wrong by 65.61</span></div>
+  <p class="prose">Every tree that follows exists only to shrink that 65.61. Gradient boosting never
+  predicts a price directly &mdash; it predicts <em>corrections to the guess so far</em>.</p>
+
+  <div class="step-h">Step 1 &middot; the first tree asks three questions</div>
+  <p class="prose">A tree is a chain of yes/no questions ending in a number. This is the actual path the
+  first tree took for this hour &mdash; the real feature names, the real thresholds it chose, and the
+  real values this hour carried:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>The tree asks</th><th class="num">This hour</th><th>Answer</th><th>Goes</th></tr></thead>
+    <tbody>
+      <tr><td><code>spot_price_se3_lag_24h</code> &le; 57.67?</td><td class="num">108.20</td><td><b style="color:var(--now)">no</b></td><td>right &mdash; into the expensive branch</td></tr>
+      <tr><td><code>spot_price_se4_lag_24h</code> &le; 140.69?</td><td class="num">170.61</td><td><b style="color:var(--now)">no</b></td><td>right &mdash; the southern zone was expensive too</td></tr>
+      <tr><td><code>wind_speed_se4_fc2</code> &le; 16.10?</td><td class="num">20.50</td><td><b style="color:var(--now)">no</b></td><td>right &mdash; and it will be windy in the south</td></tr>
+      <tr class="win"><td colspan="3">leaf reached &mdash; the tree's contribution</td><td class="num">+2.00</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">Read that as one sentence: <b>"yesterday was expensive here, yesterday was very
+  expensive in the south, and tomorrow will be windy in the south."</b> Note the third question &mdash;
+  it is a <em>forecast</em>, legitimately available at the 11:00 cutoff. The tree is using tomorrow's
+  weather because tomorrow's weather was already knowable.</p>
+  <p class="prose"><b>A single leaf is not interpretable on its own.</b> High wind normally pushes prices
+  down, yet this leaf adds. It is a relative adjustment applied <em>inside</em> an already-expensive
+  branch, not a statement that wind raises prices.</p>
+
+  <div class="step-h">Step 2 &middot; why only +2.00?</div>
+  <p class="prose">Left to itself the tree wanted to add about +40. It was allowed +2.00, because every
+  tree's answer is multiplied by the <b>learning rate</b> before being added:</p>
+  <div class="calc">38.81 + (0.05 &times; 40.06) = 38.81 + 2.00 = <b>40.81</b></div>
+  <p class="prose">This deliberate timidity is the central trick. One tree that leaps the whole distance
+  would carry all of its own mistakes with it. Two hundred trees each nudging 5% of the way let later
+  trees correct earlier ones, so errors average out instead of compounding.</p>
+
+  <div class="step-h">Step 3 &middot; every later tree is trained on what is left over</div>
+  <p class="prose">Tree 2 does not see the price 104.42. It sees the <em>residual</em> &mdash; what tree 1
+  failed to explain &mdash; and tries to predict that. Tree 3 sees what trees 1 and 2 together still miss.</p>
+  <div class="tbl"><table>
+    <thead><tr><th class="num">After N trees</th><th class="num">Prediction</th><th class="num">Still short by</th><th>&nbsp;</th></tr></thead>
+    <tbody>
+      <tr><td class="num">0 &mdash; the mean</td><td class="num">38.81</td><td class="num">65.61</td><td><span class="bar" style="width:100%"></span></td></tr>
+      <tr><td class="num">1</td><td class="num">40.81</td><td class="num">63.61</td><td><span class="bar" style="width:97%"></span></td></tr>
+      <tr><td class="num">10</td><td class="num">57.11</td><td class="num">47.31</td><td><span class="bar" style="width:72%"></span></td></tr>
+      <tr><td class="num">25</td><td class="num">78.13</td><td class="num">26.29</td><td><span class="bar" style="width:40%"></span></td></tr>
+      <tr><td class="num">50</td><td class="num">97.27</td><td class="num">7.15</td><td><span class="bar" style="width:11%"></span></td></tr>
+      <tr><td class="num">100</td><td class="num">113.40</td><td class="num">&minus;8.98</td><td><span class="bar over" style="width:14%"></span></td></tr>
+      <tr class="win"><td class="num">215 &mdash; final</td><td class="num">114.22</td><td class="num">&minus;9.80</td><td><span class="bar over" style="width:15%"></span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="panel">
+    <svg viewBox="0 0 720 300" role="img" aria-label="The prediction for this hour climbs from the training mean of 38.81 towards the actual price of 104.42 as trees are added, crossing it near 60 trees and settling around 114.">
+      <g stroke="var(--rule)"><line x1="60" y1="250" x2="690" y2="250"/><line x1="60" y1="30" x2="60" y2="250"/></g>
+      <g font-size="10" fill="currentColor" opacity=".6" text-anchor="end">
+        <text x="52" y="40">130</text><text x="52" y="90">105</text>
+        <text x="52" y="140">80</text><text x="52" y="190">55</text><text x="52" y="240">30</text></g>
+      <g font-size="10" fill="currentColor" opacity=".6" text-anchor="middle">
+        <text x="60" y="268">0</text><text x="207" y="268">50</text>
+        <text x="353" y="268">100</text><text x="500" y="268">150</text>
+        <text x="690" y="268">215</text><text x="375" y="288">trees added</text></g>
+      <line x1="60" y1="91.2" x2="690" y2="91.2" stroke="var(--now)" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <text x="686" y="83.2" font-size="10.5" fill="var(--now)" text-anchor="end">actual price 104.42</text>
+      <polyline points="60.0,222.4 62.9,218.4 77.6,197.9 92.2,185.1 106.9,172.7 121.5,154.8 136.2,140.8 150.8,127.9 165.5,117.5 180.1,114.7 194.8,108.8 209.4,104.5 224.1,101.6 238.7,97.1 253.4,94.0 268.0,91.1 282.7,87.8 297.3,87.1 312.0,83.9 326.7,77.8 341.3,72.3 356.0,72.9 370.6,68.9 385.3,69.4 399.9,71.2 414.6,72.8 429.2,70.7 443.9,70.7 458.5,69.7 473.2,71.0 487.8,70.7 502.5,73.3 517.1,72.3 531.8,70.3 546.4,70.7 561.1,70.9 575.7,73.1 590.4,73.1 605.0,72.8 619.7,72.0 634.3,72.4 649.0,72.5 663.6,72.3 678.3,71.6" fill="none" stroke="var(--done)" stroke-width="2.2"/>
+      <circle cx="60.0" cy="222.4" r="4" fill="var(--done)"/>
+      <text x="70.0" y="238.4" font-size="10.5" fill="currentColor" opacity=".6">starts at the mean, 38.81</text>
+      <circle cx="690.0" cy="71.6" r="4" fill="var(--done)"/>
+    </svg>
+    <p class="cap">Each of the 215 steps is one tree adding its small correction. The climb is steep early
+    &mdash; the first 50 trees close 87% of the gap &mdash; then flattens as the leftovers get harder.</p>
+  </div>
+
+  <div class="step-h">Step 4 &middot; the combination, and an honest result</div>
+  <div class="calc">prediction = 38.81 &nbsp;+&nbsp; the 215 shrunk tree corrections &nbsp;=&nbsp; <b>114.22</b></div>
+  <div class="ask">
+    <p><b>On this particular hour, the naive baseline beat the model.</b></p>
+    <p>The model said 114.22 against an actual 104.42 &mdash; a miss of 9.80. "Yesterday at 18:00" said
+    108.20, a miss of 3.78. That is not a flaw in the example, it is the point of showing a real one. The
+    model wins <em>on average</em> &mdash; 19.56 against 26.28 across 7,008 hours, and on 10 of 10 folds.
+    It does not win every hour, and an explanation that only showed hours where it did would be selling
+    something.</p>
+  </div>
+
+  <div class="step-h">Step 5 &middot; when to stop &mdash; overfitting made visible</div>
+  <p class="prose">More trees always fit the training data better. That is exactly the danger: past a
+  point the model stops learning how electricity prices behave and starts memorising the particular hours
+  it was shown. Both curves below come from the same fold &mdash; one measures error on data the model
+  trained on, the other on 2,303 hours it was not allowed to see.</p>
+  <div class="panel">
+    <svg viewBox="0 0 720 310" role="img" aria-label="Training error falls continuously from 26.9 to 6.6 as trees are added, while validation error flattens at about 20.3 after roughly 150 trees. The widening gap between the two curves is overfitting.">
+      <g stroke="var(--rule)"><line x1="60" y1="250" x2="690" y2="250"/><line x1="60" y1="30" x2="60" y2="250"/></g>
+      <g font-size="10" fill="currentColor" opacity=".6" text-anchor="end">
+        <text x="52" y="40">35</text><text x="52" y="100">25</text>
+        <text x="52" y="160">15</text><text x="52" y="220">5</text></g>
+      <g font-size="10" fill="currentColor" opacity=".6" text-anchor="middle">
+        <text x="60" y="268">0</text><text x="218" y="268">150</text>
+        <text x="375" y="268">300</text><text x="532" y="268">450</text>
+        <text x="690" y="268">600</text><text x="375" y="288">trees added &middot; MAE on the vertical</text></g>
+      <line x1="217.5" y1="30" x2="217.5" y2="250" stroke="var(--now)" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <text x="225.5" y="44" font-size="10.5" fill="var(--now)">nothing useful after here</text>
+      <polyline points="61.0,48.0 76.8,86.3 92.6,101.4 108.3,112.8 124.0,119.5 139.8,123.6 155.6,124.9 171.3,125.4 187.1,126.5 202.8,127.0 218.6,127.4 234.3,127.5 250.1,127.4 265.8,127.3 281.6,127.4 297.3,127.2 313.1,127.1 328.8,127.1 344.6,127.0 360.3,127.1 376.1,127.4 391.8,127.4 407.6,127.4 423.3,127.6 439.1,127.8 454.8,127.7 470.6,127.8 486.3,127.9 502.1,128.0 517.8,128.3 533.5,128.3 549.3,128.3 565.0,128.1 580.8,128.2 596.6,128.2 612.3,128.3 628.1,128.3 643.8,128.2 659.6,128.3 675.3,128.4" fill="none" stroke="var(--now)" stroke-width="2.2"/>
+      <polyline points="61.0,88.4 76.8,131.3 92.6,151.2 108.3,162.9 124.0,170.5 139.8,176.0 155.6,180.2 171.3,183.6 187.1,186.3 202.8,188.6 218.6,190.4 234.3,192.0 250.1,193.3 265.8,194.6 281.6,195.6 297.3,196.7 313.1,197.6 328.8,198.5 344.6,199.2 360.3,200.0 376.1,200.9 391.8,201.5 407.6,202.2 423.3,202.9 439.1,203.5 454.8,204.0 470.6,204.6 486.3,205.2 502.1,205.7 517.8,206.3 533.5,206.8 549.3,207.2 565.0,207.7 580.8,208.1 596.6,208.5 612.3,208.9 628.1,209.3 643.8,209.7 659.6,210.0 675.3,210.3" fill="none" stroke="var(--done)" stroke-width="2.2"/>
+      <text x="684.0" y="200.3" font-size="10.5" fill="var(--done)" text-anchor="end">on data it trained on &mdash; 6.61</text>
+      <text x="684.0" y="118.4" font-size="10.5" fill="var(--now)" text-anchor="end">on unseen data &mdash; 20.27</text>
+      <text x="60" y="304" font-size="10.5" fill="currentColor" opacity=".6">The gap between the lines is the memorising. It only ever widens.</text>
+    </svg>
+    <p class="cap">After roughly 150 trees the honest curve is flat. The next 450 trees improve performance
+    on unseen data by <b>0.17 EUR/MWh</b> while training error drops by a third &mdash; that difference is
+    memorisation, and it buys nothing.</p>
+  </div>
+
+  <p class="prose"><b>Early stopping</b> automates the judgement: grow trees in batches of 25, check the
+  held-out slice after each batch, stop once four batches in a row fail to improve it. The detail that
+  matters most &mdash; <b>the held-out slice is the last stretch of the training period in time order,
+  never a random sample.</b> Neighbouring hours are about 95% alike, so a random slice would put 14:00 in
+  training and 15:00 in validation, and the model would be graded on an answer it had effectively already
+  been given.</p>
+
+  <div class="grid2">
+    <div class="card"><h4>Learning rate &mdash; how big a step each tree takes</h4>
+      <p>0.05 here. Lower is more cautious and needs more trees; higher gets there faster and overshoots.
+      It trades against tree count almost exactly: 0.03 stopped at 225 trees, 0.15 at 50.</p></div>
+    <div class="card"><h4>Number of trees &mdash; how many corrections in total</h4>
+      <p>Not chosen by hand. Early stopping picks it per fold by watching held-out error, so a fold with
+      more history can grow a larger model without anyone deciding that in advance.</p></div>
+    <div class="card"><h4>Overfitting &mdash; memorising instead of learning</h4>
+      <p>Visible as the widening gap above: training error 6.61 against 20.27 on unseen data. The training
+      number is not a performance figure &mdash; it measures how much was memorised.</p></div>
+    <div class="card"><h4>Early stopping &mdash; knowing when to quit</h4>
+      <p>scikit-learn's built-in version picks its validation slice at random, which is both
+      non-reproducible and wrong for a time series, so it is reimplemented here chronologically.</p></div>
+  </div>
+</section>
+
+
+<section>
+  <h2>Stage 6 &mdash; what the validation found</h2>
+  <p class="prose">Stage 5 asked <em>is the model good?</em> and answered yes, on average. Stage 6
+  asks where it is bad, whether it is bad for reasons that make physical sense, and whether every
+  feature earns its place. Measured on the same ten reporting folds &mdash; 7,007 hours.
+  <b>Three earlier conclusions did not survive.</b></p>
+
+  <h3>The model shrinks &mdash; and that one fact explains three separate symptoms</h3>
+  <div class="panel">
+    <svg viewBox="0 0 760 300" role="img" aria-label="Mean signed error by true price band. The model over-predicts cheap hours by up to 14 EUR per megawatt hour and under-predicts expensive hours by up to 98, pulling every prediction toward the middle of the distribution.">
+      <line x1="90" y1="200" x2="740" y2="200" stroke="currentColor" stroke-opacity=".45"/>
+      <text x="82" y="204" text-anchor="end" font-size="10.5" fill="currentColor" opacity=".6">0</text>
+      <text x="20" y="30" font-size="11" fill="var(--accent)">predicts too HIGH &uarr;</text>
+      <text x="20" y="292" font-size="11" fill="var(--now)">predicts too LOW &darr;</text>
+      <rect x="110" y="188.5" width="90" height="11.5" rx="2" fill="var(--accent)" fill-opacity=".85"/><text x="155.0" y="180.5" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--accent)">+8.2</text><text x="155.0" y="218.0" text-anchor="middle" font-size="10.5" fill="currentColor" opacity=".65">negative</text><text x="155.0" y="288" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".5">n=110</text><rect x="216" y="180.5" width="90" height="19.5" rx="2" fill="var(--accent)" fill-opacity=".85"/><text x="261.0" y="172.5" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--accent)">+13.9</text><text x="261.0" y="218.0" text-anchor="middle" font-size="10.5" fill="currentColor" opacity=".65">0-20</text><text x="261.0" y="288" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".5">n=1130</text><rect x="322" y="195.6" width="90" height="4.4" rx="2" fill="var(--accent)" fill-opacity=".85"/><text x="367.0" y="187.6" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--accent)">+3.1</text><text x="367.0" y="218.0" text-anchor="middle" font-size="10.5" fill="currentColor" opacity=".65">20-50</text><text x="367.0" y="288" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".5">n=1480</text><rect x="428" y="200.0" width="90" height="9.5" rx="2" fill="var(--now)" fill-opacity=".85"/><text x="473.0" y="225.5" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--now)">-6.8</text><text x="473.0" y="194.0" text-anchor="middle" font-size="10.5" fill="currentColor" opacity=".65">50-100</text><text x="473.0" y="288" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".5">n=2796</text><rect x="534" y="200.0" width="90" height="27.4" rx="2" fill="var(--now)" fill-opacity=".85"/><text x="579.0" y="243.4" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--now)">-19.6</text><text x="579.0" y="194.0" text-anchor="middle" font-size="10.5" fill="currentColor" opacity=".65">100-200</text><text x="579.0" y="288" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".5">n=1433</text><rect x="640" y="200.0" width="90" height="136.8" rx="2" fill="var(--now)" fill-opacity=".85"/><text x="685.0" y="352.8" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--now)">-97.7</text><text x="685.0" y="194.0" text-anchor="middle" font-size="10.5" fill="currentColor" opacity=".65">200+</text><text x="685.0" y="288" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".5">n=58</text>
+    </svg>
+    <p class="cap">Mean signed error by true price band, EUR/MWh. <b>The model over-predicts cheap
+    hours and under-predicts expensive ones</b> — regression to the mean. The aggregate figure of
+    &minus;4.50 is the weighted average of two opposite biases, so "the model runs low" is only true
+    above about &euro;50.</p>
+  </div>
+
+  <p class="prose">That single mechanism accounts for three things previously treated as separate
+  problems:</p>
+  <ul class="prose">
+    <li><b>Why it adds nothing on spikes.</b> On the 58 hours above &euro;200 it under-predicts by 98
+    on average — saying about 154 when the truth is 252. It is not failing to model spikes, it is
+    actively shrinking them.</li>
+    <li><b>Why it adds nothing on negative hours.</b> The same effect at the other end: +8.18 against
+    a true mean of &minus;1.53.</li>
+    <li><b>Why the interval misses high more than low.</b> The centre of the interval is pulled down
+    on exactly the expensive hours where the outcome is most likely to be extreme.</li>
+  </ul>
+
+  <div class="ask">
+    <p><b>An explanation I had published, now refuted.</b></p>
+    <p>Earlier versions of this page and of <code>docs/05_modeling.md</code> argued that the bias and
+    the interval asymmetry might both come from trees being unable to predict above their training
+    maximum. Measured: <b>0 of 7,007 test hours had a true price above their fold's training
+    maximum.</b> The mechanism cannot apply and the claim has been removed. The regime-shift
+    explanation is also weak — correlation between a month's price shift and its bias is
+    &minus;0.327, with stark counter-examples.</p>
+  </div>
+
+  <h3>Where the error sits</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>True price band</th><th class="num">n</th><th class="num">model MAE</th><th class="num">naive MAE</th><th class="num">share of total error</th></tr></thead>
+    <tbody>
+      <tr><td>negative</td><td class="num">110</td><td class="num">8.94</td><td class="num">8.96</td><td class="num">0.7%</td></tr>
+      <tr><td>0&ndash;20</td><td class="num">1,130</td><td class="num">15.11</td><td class="num">23.11</td><td class="num">12.5%</td></tr>
+      <tr class="win"><td>20&ndash;50</td><td class="num">1,480</td><td class="num">14.64</td><td class="num">27.13</td><td class="num">15.8%</td></tr>
+      <tr><td>50&ndash;100</td><td class="num">2,796</td><td class="num">18.76</td><td class="num">23.07</td><td class="num">38.3%</td></tr>
+      <tr><td>100&ndash;200</td><td class="num">1,433</td><td class="num">27.35</td><td class="num">32.59</td><td class="num">28.6%</td></tr>
+      <tr><td>200+</td><td class="num">58</td><td class="num">97.74</td><td class="num">97.43</td><td class="num">4.1%</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose"><b>At both extremes the model is no better than "yesterday's price."</b> All of its
+  value sits in the ordinary middle of the distribution. Anyone relying on it for spike hours should
+  know that before they do.</p>
+  <p class="prose">By hour of day, the worst is <b>18:00 (MAE 24.26)</b> and the best
+  <b>00:00 (16.17)</b> — a ratio of 1.50&times;, down from close to 2&times; for the naive baseline.
+  By month, gains run +10.7% to +37.5%, weakest in January and February 2026, which are also the two
+  most expensive months in the record.</p>
+
+  <h3>Feature importance, and a physics check that failed</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Family</th><th class="num">Summed permutation importance</th></tr></thead>
+    <tbody>
+      <tr class="win"><td>price lags</td><td class="num">6.685</td></tr>
+      <tr><td>weather forecast</td><td class="num">4.475</td></tr>
+      <tr><td>calendar</td><td class="num">2.578</td></tr>
+      <tr><td>weather observed</td><td class="num">0.464</td></tr>
+      <tr><td>price rolling</td><td class="num">&minus;0.055</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose"><code>spot_price_se3_lag_24h</code> alone scores <b>5.712</b> — one feature is
+  worth more than every weather column combined. Worth knowing before proposing more data sources.</p>
+
+  <div class="ask">
+    <p><b>The stage 3 wind finding does not transfer.</b></p>
+    <p>Exploration reported that northern wind predicts SE3's price better than local wind
+    (&minus;0.260 against &minus;0.239). In the fitted model the opposite holds:
+    <code>wind_speed_se3_fc2</code> scores 1.552 against <code>wind_speed_se1_fc2</code> 0.331.
+    The explanation is that these are different variables — on the <em>forecast</em> columns the model
+    actually uses, the two zones are <b>tied</b> (&minus;0.297 against &minus;0.296). The stage 3
+    ranking was measured on contemporaneous observed wind and does not carry over.</p>
+    <p>A second thing falls out: the observed 24-hour means correlate only &minus;0.088 to
+    &minus;0.118 with tomorrow's price. <b>Averaging over 24 hours and shifting to a cutoff destroys
+    about two-thirds of the association</b> — a better explanation of why observed weather looked
+    worthless in stage 4 than the "redundant with price lags" story told at the time.</p>
+  </div>
+
+  <div class="finding big">
+    <span class="lab">Reversal &middot; the decision to keep them is vindicated</span>
+    <p><b>The 24 observed-weather columns now earn their place: +0.826, 95% CI [+0.289, +1.329].</b>
+    Stage 4 measured +0.07 with an interval spanning zero and the decision recorded was explicitly
+    "keep them, re-test once the model is stronger". The re-test says keep them for real.</p>
+    <p>A methodological note worth carrying: permutation rates that whole family at only 0.464, but
+    removing it costs 0.826. Both are correct measurements of different things — permutation shuffles
+    <em>one column at a time</em>, so four correlated temperature columns each look useless because
+    the other three still carry the signal. <b>Single-column importance systematically understates
+    correlated groups</b>; group decisions need group ablations.</p>
+  </div>
+
+  <h3>A change deliberately not made</h3>
+  <p class="prose">The ten rolling-price features have negative permutation importance, and dropping
+  them improves the reporting folds by <b>+0.406, CI [+0.093, +0.708]</b> — apparently a free
+  improvement. It was not adopted, for two reasons.</p>
+  <ul class="prose">
+    <li>That measurement was made on the <b>reporting folds</b>, which exist so that no modelling
+    decision is made using them. "Keep" costs nothing; "change" would mean the holdout had influenced
+    the model.</li>
+    <li>Decisively, <b>the tuning folds disagree in sign</b>: dropping them there is worth
+    &minus;0.113, CI [&minus;0.337, +0.103], not distinguishable from noise. A change that helps in
+    one period and hurts in another has not been shown to be an improvement — it has been shown to be
+    unstable.</li>
+  </ul>
+
+  <h3>The interval now balances</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Interval</th><th class="num">coverage</th><th class="num">below</th><th class="num">above</th><th class="num">imbalance</th><th class="num">width</th></tr></thead>
+    <tbody>
+      <tr><td>symmetric (stage 5)</td><td class="num">80.4%</td><td class="num">5.5%</td><td class="num">14.1%</td><td class="num">8.6 pts</td><td class="num">66.4</td></tr>
+      <tr class="win"><td>asymmetric (adopted)</td><td class="num">80.4%</td><td class="num">8.4%</td><td class="num">11.1%</td><td class="num">2.7 pts</td><td class="num">69.0</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">Each side now gets its own pad and half the miscoverage budget. Imbalance falls by
+  two-thirds for 2.6 EUR/MWh of extra width. Both hit 80%, but the symmetric one hit it by cancelling
+  two errors; the asymmetric one hits it for closer to the right reason. Note that the imbalance was
+  a <em>symptom</em> of shrinkage — this treats the symptom, not the cause.</p>
+</section>
+<section>
+  <h2>What has been collected</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Table</th><th class="num">Rows</th><th>Span</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td><code>elpriset_day_ahead_prices</code></td><td class="num">197,088</td><td>2023-09-01 &rarr; 2026-08-19 (1,084 days, no gaps)</td><td>elprisetjustnu.se</td></tr>
+      <tr><td><code>nordpool_day_ahead_prices</code></td><td class="num">19,200</td><td>2026-07-01 &rarr; 2026-08-19 (live window)</td><td>Nord Pool Data Portal</td></tr>
+      <tr><td><code>SMHI_data</code></td><td class="num">608,550</td><td>2023-09-01 &rarr; 2026-08-19</td><td>SMHI Open Data (observations)</td></tr>
+      <tr><td><code>weather_forecast_openmeteo</code></td><td class="num">1,009,152</td><td>2024-04-01 &rarr; 2026-08-24, at lead 0/1/2 days</td><td>Open-Meteo previous-runs archive</td></tr>
+      <tr><td><code>features_se3_hourly</code></td><td class="num">20,900</td><td>2024-04-01 &rarr; 2026-08-19 &middot; 70 features + target</td><td>derived &mdash; the model's input</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose" style="font-size:14.5px;color:var(--ink-2)">All four bidding areas SE1&ndash;SE4; six
+  observed weather parameters per area, one station mapped per area with per-parameter overrides where a
+  station lacks a sensor. The forecast archive stores <code>lead_days</code> 0/1/2 &mdash; lead 0 is what
+  actually happened and is <b>never used as a feature</b>, only retained so forecast error can be measured
+  inside a single provider.
+  <br><br>The training table starts at 2024-04 rather than 2023-09 because that is where the forecast
+  archive begins. Trading five months of history for the forecast features was a deliberate choice: the
+  forecasts are worth 3.9 EUR/MWh, the extra observed months were worth 0.07.</p>
+</section>
+
+<section>
+  <h2>Findings worth knowing</h2>
+  <p class="prose">Everything below was discovered by testing against live systems, or by checking whether
+  a result was plausible &mdash; not assumed from documentation. Each one changed the design. <b>None of
+  them crashed anything.</b></p>
+
+  <div class="finding big">
+    <span class="lab">The largest single improvement &middot; reversed an earlier decision</span>
+    <p><b>Weather forecasts are worth 3.9 EUR/MWh; observed weather is worth nothing.</b> The original
+    design excluded all "tomorrow weather" as leakage. That was too broad &mdash; a forecast
+    <em>published before the cutoff</em> genuinely existed at the cutoff. Measured on 4,344 held-out
+    hours: observed weather adds +0.07 with an interval spanning zero, while forecasts for the delivery
+    hour add +3.89. Observed weather is redundant because yesterday's weather is already in yesterday's
+    prices; tomorrow's forecast is not.</p>
+  </div>
+
+  <div class="finding big">
+    <span class="lab">The control &middot; changed how the result should be reported</span>
+    <p><b>Ridge regression on the same 70 features scores 19.67 against boosting's 19.56</b> &mdash; a
+    difference of +0.11 with a confidence interval spanning zero. The 25.6% improvement belongs to the
+    feature engineering, not to the choice of algorithm. Boosting ships on a stability argument (fold
+    spread 1.92 against 3.13), not an accuracy one.</p>
+  </div>
+
+  <div class="finding">
+    <span class="lab">Data availability &middot; changed the source list</span>
+    <p><b>The public Nord Pool API only serves a rolling ~62-day window.</b> Anything older returns 401,
+    so it could never supply training history. elprisetjustnu.se now provides three years, with Nord Pool
+    retained for live daily collection. <b>The two agree exactly across 19,200 overlapping hours</b>
+    &mdash; mean and max difference 0.0000 EUR/MWh &mdash; which is what licenses trusting the historical
+    source. The window genuinely rolls: the Dagster partition count has already fallen from 65 to 56.</p>
+  </div>
+
+  <div class="finding">
+    <span class="lab">Leakage &middot; caught by an automated audit</span>
+    <p><b>Two bugs that would have inflated results silently, both on the 25-hour daylight-saving day.</b>
+    A fixed 24-hour price lag cannot escape a 25-hour delivery day &mdash; for the last hour it lands on
+    the <em>first</em> hour of the same day, a price from the same unpublished auction. And "one day
+    earlier" computed as 24 elapsed hours drifted the 11:00 cutoff to 12:00, handing the model an extra
+    hour it would not have had. Three target hours are dropped; the cutoff arithmetic now runs on the
+    calendar rather than the clock. Both have regression tests.</p>
+  </div>
+
+  <div class="finding">
+    <span class="lab">Wrong criterion &middot; broke the prediction intervals</span>
+    <p><b>Early stopping graded quantile models with MAE.</b> MAE is minimised by the median, so a
+    90th-percentile model was stopped exactly where it was least like a 90th-percentile model. The 80%
+    intervals covered 57.9%. Fixed by scoring with pinball loss at the model's own quantile, then
+    calibrated conformally to 80.4%. Nothing errored at any point; only a coverage check fixed in advance
+    caught it.</p>
+  </div>
+
+  <div class="finding">
+    <span class="lab">Reproducibility &middot; invalidated a conclusion</span>
+    <p><b>An early version of the weather experiment could not be reproduced, and the conclusion drawn
+    from it was wrong.</b> Repeat runs of identical code disagreed by ~0.3 EUR/MWh &mdash; the same size
+    as the effects being measured. Two causes: scikit-learn enables early stopping above 10,000 rows using
+    a <em>random</em> validation split (also wrong for a time series), and <b>DuckDB's parallel
+    <code>avg()</code> is not bitwise reproducible</b> &mdash; its floating-point summation order varies
+    between runs, shifting gradient-boosting bin edges and changing tree splits. Fixed with
+    <code>threads=1</code>. The full pipeline now reproduces every number bit for bit across runs.</p>
+  </div>
+
+  <div class="finding">
+    <span class="lab">Silent failures &middot; why every result now carries an interval</span>
+    <p>Three separate bugs produced <em>no error at all</em>: a timezone dropped during a lookup matched 0
+    of 1,083 rows and filled every weather column with nulls; a configured Nord Pool endpoint returned 404
+    because its path had been guessed rather than observed; and fetching only SMHI's quality-checked
+    archive left a silent 3.5-month hole at the recent end. All three were caught by asking "is this
+    result plausible?" rather than by anything crashing. Model comparisons are now reported with bootstrap
+    confidence intervals so a difference is only claimed when it exceeds the noise.</p>
+  </div>
+</section>
+
+<section>
+  <h2>How this differs from the production platform</h2>
+  <p class="prose">The project follows the reference platform's architectural principles without pretending to be a
+  replica. Four categories, kept deliberately separate.</p>
+
+  <h3>Copied as-is &mdash; the conventions</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Pattern</th><th>How it appears here</th></tr></thead>
+    <tbody>
+      <tr><td>Config-driven ingestion</td><td>Every source described in one <code>config/configs.py</code>; adding a source is mostly config, not logic</td></tr>
+      <tr><td>Schema classes as contracts</td><td>One class per warehouse table, resolved through a single <code>schema_mapper</code></td></tr>
+      <tr><td>One CLI entrypoint for manual runs</td><td><code>python -m ingestion.main --api &hellip; --start_date &hellip; --write</code></td></tr>
+      <tr><td>Partitioned assets with predictable names</td><td><code>get_&lt;endpoint&gt;_daily &rarr; save_&hellip;_to_parquet_daily &rarr; save_&hellip;_to_duckdb_daily</code></td></tr>
+      <tr><td>Asset factory for persistence boilerplate</td><td><code>build_save_assets()</code> &mdash; their <code>CloudSaveAsset</code> pattern</td></tr>
+      <tr><td>Retry policy and idempotent writes</td><td>3 retries with backoff; replace-per-partition so re-running a day is safe</td></tr>
+      <tr><td>Single registry</td><td>One <code>definitions.py</code> is the only source of truth for what runs</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Substituted &mdash; same shape, different backend</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Reference platform</th><th>Here</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Google Cloud Storage</td><td><code>data/raw/</code> parquet</td><td>No cloud access; identical format and partition layout</td></tr>
+      <tr><td>BigQuery</td><td>DuckDB, one local file</td><td>No cloud access; near-identical SQL</td></tr>
+      <tr><td><code>CloudSaveAsset</code></td><td><code>LocalSaveAsset</code></td><td>Same factory pattern, different destination</td></tr>
+      <tr><td>Paid Nord Pool feed</td><td>elprisetjustnu.se for history</td><td>The free API only serves ~62 days; cross-checked exactly on the overlap</td></tr>
+      <tr><td>In-house MET forecast pipeline</td><td>Open-Meteo previous-runs archive</td><td>Same idea &mdash; forecasts as they were issued &mdash; from a public archive</td></tr>
+      <tr><td>LightGBM</td><td>scikit-learn <code>HistGradientBoostingRegressor</code></td><td>LightGBM will not load on this machine (missing system <code>libomp</code>); same algorithm family</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Simplified or left out</h3>
+  <ul class="prose">
+    <li><b>Kubernetes deployment</b> &mdash; runs under <code>dagster dev</code> locally. Deployment is not the learning goal.</li>
+    <li><b>Sensors</b> &mdash; the reference platform triggers downstream work when upstream data lands; here the feature build is run explicitly.</li>
+    <li><b>TimescaleDB operational writes and bidding flows</b> &mdash; require real trading infrastructure.</li>
+    <li><b>Partial orchestration</b> &mdash; Dagster schedules Nord Pool and SMHI. The historical price source and the forecast archive are CLI-only, since both are backfills rather than daily feeds.</li>
+    <li><b>No schema class for the feature table</b> &mdash; a deliberate exception, because its columns churn through modelling. The guarantees that matter (unique keys, no grid gaps, no all-null block, no leakage) are asserted in code and covered by tests instead.</li>
+    <li><b>ENTSO-E load, generation and reservoir data</b> &mdash; free with a token, and the most obvious remaining gap. There is currently <b>no demand-side signal at all</b>.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>The feature set</h2>
+  <p class="prose">70 features and one target, at one row per delivery hour. Status is stated per group so
+  nothing reads as available when it is not.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Group</th><th class="num">Count</th><th>Status</th><th>Examples</th></tr></thead>
+    <tbody>
+      <tr><td>Price lags &mdash; SE3, SE4, SE1 at 24h / 48h / 168h</td><td class="num">9</td><td><b>built</b></td><td><code>spot_price_se3_lag_24h</code></td></tr>
+      <tr><td>Rolling price &mdash; mean/min/max over the last known day</td><td class="num">10</td><td><b>built &mdash; contribution unresolved</b></td><td><code>spot_price_se3_roll_24h_mean</code></td></tr>
+      <tr><td>North&ndash;south spread, lagged</td><td class="num">1</td><td><b>built</b></td><td><code>spread_se4_se1_lag_24h</code></td></tr>
+      <tr><td>Calendar, incl. cyclical encodings</td><td class="num">10</td><td><b>built</b></td><td><code>hour_of_day</code>, <code>hour_sin</code>, <code>is_weekend</code></td></tr>
+      <tr><td>Weather observed, summarised at the cutoff</td><td class="num">24</td><td><b>built &mdash; worth +0.83 (re-tested in stage 6)</b></td><td><code>air_temperature_se3_24h_mean</code></td></tr>
+      <tr><td>Weather forecast for the delivery hour</td><td class="num">16</td><td><b>built &mdash; worth 3.9 EUR/MWh</b></td><td><code>air_temperature_se3_fc2</code>, <code>cloud_cover_se3_fc2</code></td></tr>
+      <tr><td>Target</td><td class="num">1</td><td><b>built</b></td><td><code>target_spot_price_se3</code></td></tr>
+      <tr><td>Load, generation, reservoir levels</td><td class="num">&mdash;</td><td>not collected &middot; the most obvious gap</td><td>ENTSO-E Transparency Platform</td></tr>
+      <tr><td>Traded volumes</td><td class="num">&mdash;</td><td>not collected &middot; endpoint unknown (404)</td><td>&mdash;</td></tr>
+      <tr><td>Holiday calendar</td><td class="num">&mdash;</td><td>not built &middot; candidate</td><td>Swedish public holidays behave like weekends</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose" style="font-size:14.5px;color:var(--ink-2)"><code>hour_utc</code> and
+  <code>cutoff_utc</code> are carried in the table but dropped before training: they are used for
+  chronological splitting and for the leakage audit, and a raw timestamp would let a tree memorise
+  <em>when</em> rather than learn <em>why</em>. The forecast columns use the <b>two-day-old</b> forecast:
+  it scores identically to the day-ahead one but is unambiguously older than the cutoff, removing any
+  question about which model run issued it.</p>
+</section>
+
+<section>
+  <h2>The plan from here</h2>
+  <div class="grid2">
+    <div class="card">
+      <h4>Modelling follow-ups</h4>
+      <ul>
+        <li>Attack the shrinkage bias &mdash; a two-stage model, or the q90 model where q50 predicts high</li>
+        <li>Add ENTSO-E load and generation: still no demand-side signal anywhere in the feature set</li>
+        <li>Resolve the rolling-price-feature question on data neither fold set has seen</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Engineering follow-ups</h4>
+      <ul>
+        <li>Promote elpriset and the forecast archive to scheduled Dagster assets</li>
+        <li>Make <code>collect()</code> skip-and-report failed days instead of aborting a whole backfill &mdash; the reference platform's own convention is self-healing re-coverage</li>
+        <li>Confirm the Open-Meteo forecast issue time against its documentation, which would allow moving from the two-day to the one-day forecast</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Questions for review</h2>
+  <p class="prose">Decisions that belong to the supervisor rather than to the code.</p>
+
+  <div class="ask">
+    <p><b>1. Is the substitute price source acceptable?</b></p>
+    <p>Three years of history comes from elprisetjustnu.se, a free public service republishing Nord Pool
+    prices, because the public API only covers ~62 days. It has been cross-checked and agrees exactly
+    &mdash; but if there is a preference for ENTSO-E or the partner API, that is better changed now.</p>
+  </div>
+
+  <div class="ask">
+    <p><b>2. Is the public forecast archive an acceptable stand-in?</b></p>
+    <p>Forecast data has been brought in from Open-Meteo's previous-runs archive, and it is worth 3.9
+    EUR/MWh &mdash; the single largest improvement in the project. The remaining question is whether a
+    public community archive with no SLA is acceptable, or whether the in-house MET pipeline should be the
+    source. Note the cost: coverage starts 2024-04, which shortened training history by five months.</p>
+  </div>
+
+  <div class="ask">
+    <p><b>3. Should ENTSO-E load and generation data be added?</b></p>
+    <p>It is free with a token and is the most obvious gap in the feature set &mdash; there is currently no
+    demand-side signal at all. Against that, it means new ingestion work after the modelling stage is
+    already complete.</p>
+  </div>
+
+  <div class="ask">
+    <p><b>4. Is a 66 EUR/MWh-wide interval useful for a bidding decision?</b></p>
+    <p>It is honestly calibrated at 80.4%, but it is about as wide as the price level itself. Narrowing it
+    means a better model, not a different interval method &mdash; the width <em>is</em> the uncertainty,
+    measured.</p>
+  </div>
+
+  <div class="ask">
+    <p><b>5. Is SE3 alone the right target?</b></p>
+    <p>Currently forecasting SE3 only, using the other zones as predictors. Extending to all four is
+    feasible but widens the scope.</p>
+  </div>
+
+  <div class="ask">
+    <p><b>6. Is 25.6% over a naive baseline good enough to stop tuning the point forecast?</b></p>
+    <p>No threshold was set, deliberately &mdash; a fixed target was rejected as circular. The noise rule
+    says to stop when changes stop being distinguishable from noise, and the ridge control suggests the
+    remaining gains are in features and data, not in the algorithm.</p>
+  </div>
+
+  <div class="ask">
+    <p><b>7. Given that the model shrinks, is it fit for the intended purpose?</b></p>
+    <p>Stage 6 showed it is reliable in the ordinary middle of the price distribution and adds nothing
+    at either extreme &mdash; on spike hours above &euro;200 and on negative hours it matches "yesterday's
+    price" and no better. If the bidding process cares mainly about extreme hours, that is a design
+    problem rather than a tuning problem, and worth knowing now.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Where things live</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Folder</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td><code>config/</code></td><td>Every source described in one file &mdash; URLs, parameters, stations, storage targets</td></tr>
+      <tr><td><code>schemas/</code></td><td>One class per warehouse table; the contract between API payloads and stored data. The feature table is a deliberate exception</td></tr>
+      <tr><td><code>ingestion/</code></td><td>Per-source fetch and normalize code for all four sources, plus the CLI entrypoint for manual runs and backfills</td></tr>
+      <tr><td><code>orchestration/</code></td><td>Dagster assets, jobs and schedules &mdash; weather at 00:30, prices at 13:30</td></tr>
+      <tr><td><code>features/</code></td><td>The feature builder: hourly grid, lags, calendar, weather, and the leakage audit</td></tr>
+      <tr><td><code>models/</code></td><td>Evaluation machinery (folds, scorings, noise rule, calibration), the predictors, the stage 5 and stage 6 harnesses, the learning-rate sweep and the weather-value experiment</td></tr>
+      <tr><td><code>tests/</code></td><td>47 tests, all offline against synthetic data &mdash; 9 ingestion, 13 features, 25 evaluation and modelling</td></tr>
+      <tr><td><code>docs/</code></td><td>One document per stage, recording decisions and reasoning</td></tr>
+      <tr><td><code>notebooks/</code>, <code>reports/</code></td><td>Analysis scripts and their output, including <code>stage5_results.json</code></td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose" style="font-size:14.5px;color:var(--ink-2)">Data is never committed, mirroring the
+  reference platform's separation of code and data. Reproducing the modelling stage requires
+  <code>PYTHONPATH=. OMP_NUM_THREADS=1 python -u models/run_stage5.py</code> and takes about 50 minutes;
+  <code>--step5</code> re-runs only the interval step.</p>
+</section>
+
+<footer>
+  Nord Pool day-ahead price forecasting &middot; internship project<br>
+  Stages 1&ndash;5 complete &middot; stage 6 (validation) next &middot; 47/47 tests passing<br>
+  Sources: elprisetjustnu.se &middot; dataportal-api.nordpoolgroup.com &middot; opendata-download-metobs.smhi.se &middot; previous-runs-api.open-meteo.com<br>
+  Repository: github.com/ZarinTasnimBiash/nordpool-price-forecasting
+</footer>
+
+</div>
