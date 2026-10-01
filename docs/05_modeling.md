@@ -399,7 +399,7 @@ Every number here is reproducible bit-for-bit, which took work to achieve:
 - **`early_stopping=False`** in the estimator — scikit-learn's own version uses a random
   validation split, which is both non-deterministic and wrong for a time series.
 - **`PYTHONPATH=.`** — the harness imports `config.configs`, and running
-  `python models/run_stage5.py` puts `models/` on the path but not the repository root.
+  `PYTHONPATH=. python models/run_stage5.py` puts `models/` on the path but not the repository root.
 - `--step5` re-runs only the interval step, reusing the saved hyperparameters and winner,
   so a calibration change costs ten minutes rather than fifty.
 

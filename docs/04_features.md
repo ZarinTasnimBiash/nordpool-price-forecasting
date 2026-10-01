@@ -1,6 +1,6 @@
 # Stage 4 — Data Preparation & Feature Engineering
 
-Build with `python features/build_features.py`. Output: table `features_se3_hourly`
+Build with `PYTHONPATH=. python features/build_features.py`. Output: table `features_se3_hourly`
 in the DuckDB warehouse and `data/processed/features_se3_hourly.parquet`.
 
 **25,822 rows × 57 columns**, spanning 2023-09-08 → 2026-08-19. One row per delivery
@@ -116,7 +116,7 @@ grounds that the delivery day's own weather is unknowable. That reasoning had a 
 **forecast** for tomorrow, published before the cutoff, genuinely existed at the cutoff.
 Using it is not leakage. Refusing it threw away the single most valuable signal available.
 
-`python models/weather_value_experiment.py` trains one model seven times, changing only what
+`PYTHONPATH=. python models/weather_value_experiment.py` trains one model seven times, changing only what
 it may know about the weather. Train 2024-04-01 → 2026-02-19, test the following six months
 (4,344 hours). All modes are restricted to the forecast-covered window so they see identical
 rows — comparing a forecast model on less data against an observation model on more would

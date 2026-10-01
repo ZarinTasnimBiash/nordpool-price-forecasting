@@ -23,7 +23,7 @@ source, and the difference matters:
 Measured: observation-only weather adds nothing (+0.07 MAE, CI spans zero),
 while forecast weather is worth 3.74 EUR/MWh. See docs/04_features.md.
 
-Run:  python features/build_features.py
+Run:  PYTHONPATH=. python features/build_features.py
 """
 
 from __future__ import annotations

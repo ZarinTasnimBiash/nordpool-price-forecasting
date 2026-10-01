@@ -6,7 +6,7 @@ profiles and relationships documented in docs/03_eda.md, and writes:
   reports/eda_data.json     aggregates (feeds reports/03_eda.html)
   reports/figures/*.png     static charts embedded in docs/03_eda.md
 
-Run:  python notebooks/03_eda.py
+Run:  PYTHONPATH=. python notebooks/03_eda.py
 """
 
 from __future__ import annotations

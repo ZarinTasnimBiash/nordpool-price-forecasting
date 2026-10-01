@@ -79,8 +79,8 @@ Then, in order:
 
 ```bash
 python -m ingestion.main --api elpriset --start_date 2021-01-01 --end_date 2026-08-31
-python notebooks/03_eda.py                   # regenerates every figure
-python features/build_features.py            # builds the 70-feature table
+PYTHONPATH=. python notebooks/03_eda.py                   # regenerates every figure
+PYTHONPATH=. python features/build_features.py            # builds the 70-feature table
 PYTHONPATH=. python -u models/run_stage5.py  # ~50 min: walk-forward validation
 PYTHONPATH=. python -u models/run_stage6.py  # error analysis
 ```

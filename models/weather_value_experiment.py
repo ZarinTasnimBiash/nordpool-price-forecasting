@@ -14,7 +14,7 @@ about the weather:
 The gap between `cutoff` and `perfect` is the most that better weather data
 could ever be worth. If it is small, the forecast pipeline is not worth building.
 
-Run:  python models/weather_value_experiment.py
+Run:  PYTHONPATH=. python models/weather_value_experiment.py
 """
 
 from __future__ import annotations

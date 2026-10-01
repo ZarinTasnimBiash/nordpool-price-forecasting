@@ -1,6 +1,6 @@
 """Stage 5 — walk-forward evaluation of baselines and models.
 
-Run:  OMP_NUM_THREADS=1 python -u models/run_stage5.py [--quick] [--step5]
+Run:  PYTHONPATH=. OMP_NUM_THREADS=1 python -u models/run_stage5.py [--quick] [--step5]
 
 Every number produced here comes from folds that roll forward in time. The
 first five folds are used for tuning; the rest are never looked at until the

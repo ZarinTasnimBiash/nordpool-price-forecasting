@@ -956,4 +956,4 @@ The daylight-saving overlap that used to be on this list is fixed: the hourly gr
 
 Companion documents: docs/01_platform_conventions.md · docs/02_data_access.md · docs/03_eda.md 
 Run the test suite with `pytest tests/` (22 tests) · open the pipeline UI with `dagster dev -f orchestration/definitions.py` 
-Build the feature table with `python features/build_features.py` · reproduce the weather measurement with `OMP_NUM_THREADS=1 python models/weather_value_experiment.py`
+Build the feature table with `PYTHONPATH=. python features/build_features.py` · reproduce the weather measurement with `PYTHONPATH=. OMP_NUM_THREADS=1 python models/weather_value_experiment.py`

@@ -1,6 +1,6 @@
 # Stage 3 — Exploratory Data Analysis
 
-Reproduce with `python notebooks/03_eda.py`, which writes `reports/eda_data.json`
+Reproduce with `PYTHONPATH=. python notebooks/03_eda.py`, which writes `reports/eda_data.json`
 and the figures below to `reports/figures/`. This document is the canonical report;
 `reports/03_eda.html` is an interactive rendering of the same numbers.
 

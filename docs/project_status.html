@@ -136,11 +136,11 @@ footer { margin-top:64px; padding-top:20px; border-top:1px solid var(--rule);
   <h1>Forecasting SE3 day-ahead prices</h1>
   <p class="standfirst">Where the project stands, what has been built and measured, what the
   validation found &mdash; including three results that overturned earlier conclusions &mdash; and
-  what remains.</p>
+  what would come next.</p>
 </header>
 
 <div class="stats">
-  <div class="stat"><b>5 / 7</b><span>stages complete</span></div>
+  <div class="stat"><b>6 / 6</b><span>stages complete</span></div>
   <div class="stat hero"><b>19.56</b><span>MAE vs 26.28 naive</span></div>
   <div class="stat hero"><b>80.4%</b><span>interval coverage</span></div>
   <div class="stat"><b>1.83M</b><span>rows collected</span></div>
@@ -311,18 +311,14 @@ footer { margin-top:64px; padding-top:20px; border-top:1px solid var(--rule);
       stated 80%.</p>
       <span class="out">&rarr; docs/05_modeling.md &middot; models/ &middot; reports/stage5_results.json</span></div><span class="pill">Done</span></div>
 
-    <div class="stage is-now"><div class="snum">6</div><div class="sbody">
+    <div class="stage is-done"><div class="snum">6</div><div class="sbody">
       <h4>Validation &amp; error analysis</h4>
       <p>Error by hour, month and price level; permutation importance checked against the stage 3
       physics; family ablations; an asymmetric interval. <b>Three earlier conclusions were
       overturned</b> — observed weather now earns its place, the northern-wind finding does not
       transfer, and the extrapolation explanation was refuted outright.</p>
-      <span class="out">&rarr; docs/06_validation.md &middot; models/run_stage6.py</span></div><span class="pill">Next</span></div>
+      <span class="out">&rarr; docs/06_validation.md &middot; models/run_stage6.py</span></div><span class="pill">Done</span></div>
 
-    <div class="stage"><div class="snum">7</div><div class="sbody">
-      <h4>Report &amp; presentation</h4>
-      <p>Written report and slides, including what would change with production data and infrastructure.</p>
-      <span class="out">&rarr; reports/</span></div><span class="pill">Planned</span></div>
   </div>
 </section>
 
@@ -1058,7 +1054,7 @@ footer { margin-top:64px; padding-top:20px; border-top:1px solid var(--rule);
 
 <footer>
   Nord Pool day-ahead price forecasting &middot; internship project<br>
-  Stages 1&ndash;5 complete &middot; stage 6 (validation) next &middot; 47/47 tests passing<br>
+  Stages 1&ndash;6 complete &middot; 47/47 tests passing<br>
   Sources: elprisetjustnu.se &middot; dataportal-api.nordpoolgroup.com &middot; opendata-download-metobs.smhi.se &middot; previous-runs-api.open-meteo.com<br>
   Repository: github.com/ZarinTasnimBiash/nordpool-price-forecasting
 </footer>

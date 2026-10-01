@@ -26,7 +26,7 @@ import pandas as pd
 from config.configs import STORAGE
 from models import evaluation as ev
 from models.predictors import (ConformalQuantileModel, SingleModel, TARGET,
-                               feature_columns, naive)
+                               feature_columns)
 from models.run_stage5 import load_features
 
 OUT = STORAGE["duckdb_path"].parent.parent / "reports" / "stage6_results.json"
